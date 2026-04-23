@@ -1,3 +1,32 @@
+# IDE
+.vscode/
+.idea/
+*.iml
+.settings/
+.project
+.classpath
+
+# Build artifacts
+**/target/
+**/dist/
+**/out/
+
+# Dependencies
+**/node_modules/
+
+# Docker
+.docker/
+*.tar
+
+# Env
+.env
+.env.local
+
+# Maven
+.mvn/
+mvnw
+mvnw.cmd
+
 # Compiled class file
 *.class
 
