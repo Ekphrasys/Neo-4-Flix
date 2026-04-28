@@ -20,11 +20,12 @@ public class Movie {
     public Movie() {
     }
 
-    public Movie(Long id, String title, String description, int releaseYear) {
+    public Movie(Long id, String title, String description, int releaseYear, Genre genre) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.releaseYear = releaseYear;
+        this.genre = genre;
     }
 
     public String getTitle() {
