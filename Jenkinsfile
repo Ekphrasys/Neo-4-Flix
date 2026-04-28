@@ -26,10 +26,8 @@ pipeline {
             steps {
                 script {
                     def services = ['movie-service']
-                    dir('services') {
-                        for (service in services) {
-                            sh "mvn clean install -pl ${service} -am"
-                        }
+                    for (service in services) {
+                        sh "mvn clean install -pl services/${service} -am"
                     }
                 }
             }
