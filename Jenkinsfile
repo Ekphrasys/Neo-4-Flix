@@ -24,8 +24,11 @@ pipeline {
 
         stage('SERVICES : Build & Test') {
             steps {
+                def services = ['movie-service']
                 dir('services') {
-                    sh 'mvn clean install'
+                    for (service in services) {
+                        sh "mvn clean install -pl ${service} -am"
+                    }
                 }
             }
         }
