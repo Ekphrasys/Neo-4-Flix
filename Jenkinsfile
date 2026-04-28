@@ -21,5 +21,22 @@ pipeline {
                 checkout scm
             }
         }
+
+        stage('SERVICES : Build & Test') {
+            steps {
+                dir('services') {
+                    sh 'mvn clean install'
+                }
+            }
+        }
+
+        stage('FRONTEND : Build & Test') {
+            steps {
+                dir('frontend') {
+                    sh 'npm ci'
+                    sh 'npm run build'
+                }
+            }
+        }
     }
 }
