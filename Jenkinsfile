@@ -24,10 +24,12 @@ pipeline {
 
         stage('SERVICES : Build & Test') {
             steps {
-                def services = ['movie-service']
-                dir('services') {
-                    for (service in services) {
-                        sh "mvn clean install -pl ${service} -am"
+                script {
+                    def services = ['movie-service']
+                    dir('services') {
+                        for (service in services) {
+                            sh "mvn clean install -pl ${service} -am"
+                        }
                     }
                 }
             }
