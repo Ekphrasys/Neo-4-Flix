@@ -1,0 +1,133 @@
+/* Global styles + thème sombre “inspiré Netflix” (sans assets/branding Netflix). */
+
+:root {
+  /* Couleurs */
+  --n4f-bg: #141414;
+  --n4f-surface: #181818;
+  --n4f-surface-2: #222;
+  --n4f-border: rgba(255, 255, 255, 0.08);
+
+  --n4f-text: #f5f5f1;
+  --n4f-text-muted: rgba(245, 245, 241, 0.72);
+  --n4f-text-faint: rgba(245, 245, 241, 0.5);
+
+  --n4f-accent: #e50914;
+  --n4f-accent-2: #b20710;
+
+  /* Layout */
+  --n4f-radius: 14px;
+  --n4f-radius-sm: 10px;
+  --n4f-container: 1100px;
+
+  /* Ombres */
+  --n4f-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(1200px 600px at 20% -10%, rgba(229, 9, 20, 0.14), transparent 60%),
+	radial-gradient(900px 500px at 80% 0%, rgba(255, 255, 255, 0.05), transparent 55%),
+	var(--n4f-bg);
+  color: var(--n4f-text);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.45;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+}
+
+/* Focus visible (accessibilité clavier) */
+:where(a, button, [role='button'], input, select, textarea):focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--n4f-accent) 85%, white);
+  outline-offset: 2px;
+}
+
+/* Bouton “Netflix-like” réutilisable */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  appearance: none;
+  border: 1px solid var(--n4f-border);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+  color: var(--n4f-text);
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.16);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.03));
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn--accent {
+  border-color: rgba(229, 9, 20, 0.35);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--n4f-accent) 92%, white), var(--n4f-accent-2));
+}
+
+.btn--accent:hover {
+  border-color: rgba(229, 9, 20, 0.6);
+}
+
+/* Scrollbar (optionnel, sans casser sur navigateurs non compatibles) */
+@supports selector(::-webkit-scrollbar) {
+  ::-webkit-scrollbar {
+	width: 12px;
+  }
+  ::-webkit-scrollbar-track {
+	background: var(--n4f-bg);
+  }
+  ::-webkit-scrollbar-thumb {
+	background: rgba(255, 255, 255, 0.14);
+	border-radius: 999px;
+	border: 3px solid var(--n4f-bg);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+	background: rgba(255, 255, 255, 0.22);
+  }
+}
+
+/* Réduction des animations si l’utilisateur le demande */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+	animation-duration: 0.001ms !important;
+	animation-iteration-count: 1 !important;
+	transition-duration: 0.001ms !important;
+	scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,13 @@
+<header class="topbar">
+  <div class="topbar__inner">
+    <a class="brand" routerLink="/movies" aria-label="Neo-4-Flix home">Neo-4-Flix</a>
+
+    <nav class="nav" aria-label="Main navigation">
+      <a routerLink="/movies" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Movies</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <router-outlet />
+</main>
