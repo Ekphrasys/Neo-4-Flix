@@ -12,7 +12,7 @@ import { MovieService } from '../../services/movie.service';
 	  <header class="page__header">
 		<h1>Movies</h1>
 
-		<button type="button" class="btn" (click)="reload()" [disabled]="loading()">
+		<button type="button" class="btn btn--accent" (click)="reload()" [disabled]="loading()">
 		  Refresh
 		</button>
 	  </header>
@@ -52,45 +52,37 @@ import { MovieService } from '../../services/movie.service';
   styles: [
 	`
 	  .page {
-		max-width: 900px;
-		margin: 0 auto;
-		padding: 1.25rem;
-		font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+		padding: 0; /* le container global gère déjà le padding */
 	  }
 
 	  .page__header {
 		display: flex;
-		align-items: center;
+		align-items: end;
 		justify-content: space-between;
 		gap: 1rem;
-		margin-bottom: 1rem;
+		margin-bottom: 1.1rem;
+		padding: 1.15rem 1.1rem;
+		border: 1px solid var(--n4f-border);
+		border-radius: var(--n4f-radius);
+		background:
+			radial-gradient(700px 180px at 20% 0%, rgba(229, 9, 20, 0.25), transparent 60%),
+			linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
 	  }
 
 	  h1 {
 		margin: 0;
-		font-size: 1.75rem;
-	  }
-
-	  .btn {
-		padding: 0.5rem 0.75rem;
-		border: 1px solid #d0d5dd;
-		background: #fff;
-		border-radius: 0.5rem;
-		cursor: pointer;
-	  }
-
-	  .btn:disabled {
-		opacity: 0.65;
-		cursor: not-allowed;
+		font-size: 1.65rem;
+		letter-spacing: -0.02em;
+		line-height: 1.1;
 	  }
 
 	  .status {
 		margin: 1rem 0;
-		color: #344054;
+		color: var(--n4f-text-muted);
 	  }
 
 	  .status--error {
-		color: #b42318;
+		color: color-mix(in srgb, var(--n4f-accent) 85%, white);
 	  }
 
 	  .movies {
@@ -98,36 +90,77 @@ import { MovieService } from '../../services/movie.service';
 		padding: 0;
 		margin: 0;
 		display: grid;
-		gap: 0.75rem;
+		gap: 0.9rem;
+		grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
 	  }
 
 	  .movies__item {
-		border: 1px solid #eaecf0;
-		border-radius: 0.75rem;
-		padding: 0.9rem;
-		background: #fff;
+		position: relative;
+		overflow: hidden;
+		border: 1px solid var(--n4f-border);
+		border-radius: var(--n4f-radius);
+		padding: 0.95rem 0.95rem 0.9rem;
+		background:
+			linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+		box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset;
+		transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+	  }
+
+	  /* Petite barre d'accent en haut (effet “row highlight”) */
+	  .movies__item::before {
+		content: '';
+		position: absolute;
+		left: 0;
+		top: 0;
+		height: 3px;
+		width: 100%;
+		background: linear-gradient(90deg, var(--n4f-accent), rgba(229, 9, 20, 0));
+		opacity: 0.55;
+	  }
+
+	  @media (hover: hover) {
+		.movies__item:hover {
+		  transform: translateY(-4px) scale(1.01);
+		  border-color: rgba(255, 255, 255, 0.18);
+		  box-shadow: var(--n4f-shadow);
+		}
 	  }
 
 	  .movies__title {
-		font-weight: 600;
+		font-weight: 750;
 		margin-bottom: 0.25rem;
 	  }
 
 	  .movies__year {
-		font-weight: 400;
-		color: #667085;
-		margin-left: 0.25rem;
+		font-weight: 550;
+		color: var(--n4f-text-faint);
+		margin-left: 0.35rem;
 	  }
 
 	  .movies__meta {
-		color: #667085;
-		font-size: 0.9rem;
-		margin-bottom: 0.5rem;
+		color: var(--n4f-text-muted);
+		font-size: 0.92rem;
+		margin-bottom: 0.55rem;
 	  }
 
 	  .movies__desc {
 		margin: 0;
-		color: #344054;
+		color: var(--n4f-text-muted);
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	  }
+
+	  @media (max-width: 560px) {
+		.page__header {
+		  flex-direction: column;
+		  align-items: stretch;
+		}
+		.page__header .btn {
+		  width: 100%;
+		  justify-content: center;
+		}
 	  }
 	`
   ]

@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Arrays;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.Matchers.*;
@@ -24,6 +25,8 @@ import static org.hamcrest.Matchers.*;
 @WebMvcTest(MovieController.class)
 @Import(SecurityConfig.class)
 class MovieControllerTest {
+    private static String TITLE = "Inception";
+    private static String DESC = "description";
 
     @Autowired
     private MockMvc mockMvc;
@@ -36,29 +39,29 @@ class MovieControllerTest {
 
     @Test
     void testGetAllMovies() throws Exception {
-        Movie m1 = new Movie(1L, "Inception", "description", 2020, Genre.ACTION);
-        Movie m2 = new Movie(2L, "Interstellar", "description", 2020, Genre.ACTION);
+        Movie m1 = new Movie(1L, TITLE, DESC, 2020, Genre.ACTION);
+        Movie m2 = new Movie(2L, "Interstellar", DESC, 2020, Genre.ACTION);
 
         Mockito.when(movieService.getAllMovies()).thenReturn(Arrays.asList(m1, m2));
 
         mockMvc.perform(get("/api/movies"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].title", is("Inception")));
+                .andExpect(jsonPath("$[0].title", is(TITLE)));
     }
 
     @Test
-    void testGetMovieById_Found() throws Exception {
-        Movie movie = new Movie(1L, "Inception", "description", 2020, Genre.ACTION);
+    void testGetMovieById() throws Exception {
+        Movie movie = new Movie(1L, TITLE, DESC, 2020, Genre.ACTION);
         Mockito.when(movieService.getMovieById(1L)).thenReturn(Optional.of(movie));
 
         mockMvc.perform(get("/api/movies/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title", is("Inception")));
+                .andExpect(jsonPath("$.title", is(TITLE)));
     }
 
     @Test
-    void testGetMovieById_NotFound() throws Exception {
+    void testGetMovieByIdNotFound() throws Exception {
         Mockito.when(movieService.getMovieById(99L)).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/api/movies/99"))
@@ -67,10 +70,10 @@ class MovieControllerTest {
 
     @Test
     void testCreateMovie() throws Exception {
-        Movie movie = new Movie(null, "Tenet", "description", 2020, Genre.ACTION);
-        Movie savedMovie = new Movie(1L, "Tenet", "description", 2020, Genre.ACTION);
+        Movie movie = new Movie(null, "Tenet", DESC, 2020, Genre.ACTION);
+        Movie savedMovie = new Movie(1L, "Tenet", DESC, 2020, Genre.ACTION);
 
-        Mockito.when(movieService.saveMovie(Mockito.any(Movie.class))).thenReturn(savedMovie);
+        Mockito.when(movieService.saveMovie(any(Movie.class))).thenReturn(savedMovie);
 
         mockMvc.perform(post("/api/movies")
                 .contentType(MediaType.APPLICATION_JSON)
