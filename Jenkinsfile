@@ -28,7 +28,7 @@ pipeline {
                     def services = ['movie-service']
                     for (service in services) {
                         dir("services/${service}") {
-                            sh "mvn clean install"
+                            sh "mvn clean install dependency:copy-dependencies"
                         }
                     }
                 }
