@@ -25,7 +25,7 @@ pipeline {
         stage('SERVICES : Build & Test') {
             steps {
                 script {
-                    def services = ['movie-service']
+                    def services = ['movie-service', 'user-service']
                     for (service in services) {
                         dir("services/${service}") {
                             sh "mvn clean install dependency:copy-dependencies"
@@ -41,7 +41,7 @@ pipeline {
                     sh '''
                         export HOME=/tmp/jenkins-home
                         npm ci
-                        npm test -- --watch=false --browsers=ChromeHeadlessCI --code-coverage --reporters=progress,coverage
+                        npm test -- --watch=false --browsers=ChromeHeadlessCI --codeCoverage --reporters=progress,coverage
                     '''
                 }
             }
