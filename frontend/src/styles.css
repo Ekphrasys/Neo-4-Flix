@@ -131,3 +131,122 @@ a {
 	scroll-behavior: auto !important;
   }
 }
+
+.auth {
+  display: grid;
+  place-items: center;
+  padding: 1.5rem 0;
+}
+
+.auth__card {
+  width: min(520px, 100%);
+  border: 1px solid var(--n4f-border);
+  border-radius: var(--n4f-radius);
+  background:
+    radial-gradient(700px 220px at 15% 0%, rgba(229, 9, 20, 0.22), transparent 60%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+  box-shadow: var(--n4f-shadow);
+  padding: 1.2rem 1.15rem;
+}
+
+.auth__header {
+  margin-bottom: 1rem;
+}
+
+.auth__title {
+  margin: 0;
+  font-size: 1.65rem;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.auth__subtitle {
+  margin: 0.55rem 0 0;
+  color: var(--n4f-text-muted);
+}
+
+.form {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.field__label {
+  font-weight: 650;
+  color: var(--n4f-text-muted);
+}
+
+.field__control {
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  border-radius: var(--n4f-radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.25);
+  color: var(--n4f-text);
+  transition: border-color 140ms ease, background 140ms ease;
+}
+
+.field__control::placeholder {
+  color: var(--n4f-text-faint);
+}
+
+.field__control:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.field__control:focus {
+  outline: none;
+  border-color: rgba(229, 9, 20, 0.55);
+  background: rgba(0, 0, 0, 0.32);
+}
+
+.field__hint {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--n4f-text-faint);
+}
+
+.alert {
+  margin: 0.15rem 0 0;
+  padding: 0.7rem 0.8rem;
+  border-radius: var(--n4f-radius-sm);
+  border: 1px solid rgba(229, 9, 20, 0.35);
+  background: color-mix(in srgb, var(--n4f-accent) 14%, rgba(0, 0, 0, 0.15));
+  color: color-mix(in srgb, var(--n4f-accent) 85%, white);
+}
+
+.form__submit {
+  width: 100%;
+  padding-block: 0.7rem;
+  border-radius: 999px;
+  margin-top: 0.25rem;
+}
+
+.auth__footer {
+  margin: 0.55rem 0 0;
+  color: var(--n4f-text-muted);
+  font-size: 0.95rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth__footer a {
+  color: var(--n4f-text);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+.auth__footer a:hover {
+  border-bottom-color: rgba(255, 255, 255, 0.35);
+}
+
+.dot {
+  opacity: 0.6;
+}

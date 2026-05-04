@@ -25,7 +25,7 @@ pipeline {
         stage('SERVICES : Build & Test') {
             steps {
                 script {
-                    def services = ['movie-service']
+                    def services = ['movie-service', 'user-service']
                     for (service in services) {
                         dir("services/${service}") {
                             sh "mvn clean install dependency:copy-dependencies"
@@ -35,11 +35,14 @@ pipeline {
             }
         }
 
-        stage('FRONTEND : Build & Test') {
+        stage('Frontend - Build & Test') {
             steps {
                 dir('frontend') {
-                    sh 'npm ci'
-                    sh 'npm run build'
+                    sh '''
+                        export HOME=/tmp/jenkins-home
+                        npm ci
+                        npm test -- --browsers=ChromeHeadlessNoSandbox
+                    '''
                 }
             }
         }
@@ -48,8 +51,11 @@ pipeline {
             steps {
                 script {
                     def scannerHome = tool 'SonarQubeScanner'
-                    withSonarQubeEnv('SonarQube') { 
-                        sh "${scannerHome}/bin/sonar-scanner"
+                    withSonarQubeEnv('SonarQube') {
+                        nodejs(nodeJSInstallationName: 'node18', configId: '') {
+                            sh 'node -v'
+                            sh "${scannerHome}/bin/sonar-scanner"
+                        }
                     }
                 }
             }
