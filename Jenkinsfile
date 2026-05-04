@@ -35,15 +35,14 @@ pipeline {
             }
         }
 
-        stage('FRONTEND : Build & Test') {
+        stage('Frontend - Build & Test') {
             steps {
-                nodejs(nodeJSInstallationName: 'node22', configId: '') {
-                    dir('frontend') {
-                        sh 'node -v'
-                        sh 'npm -v'
-                        sh 'npm ci'
-                        sh 'npm run build'
-                    }
+                dir('frontend') {
+                    sh '''
+                        export HOME=/tmp/jenkins-home
+                        npm ci
+                        npm test -- --watch=false --browsers=ChromeHeadlessCI --code-coverage --reporters=progress,coverage
+                    '''
                 }
             }
         }
