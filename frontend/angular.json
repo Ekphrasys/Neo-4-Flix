@@ -24,10 +24,7 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.css",
-              "src/app/app.css"
-            ]
+            "styles": ["src/styles.css", "src/app/app.css"]
           },
           "configurations": {
             "production": {
@@ -66,7 +63,13 @@
           "defaultConfiguration": "development"
         },
         "test": {
-          "builder": "@angular/build:unit-test"
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "runner": "karma",
+            "runnerConfig": "karma.conf.js",
+            "tsConfig": "tsconfig.spec.json",
+            "coverage": true
+          }
         }
       }
     }

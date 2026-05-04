@@ -5,22 +5,16 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { of, throwError } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
-  let mockAuthService: any;
-  let mockRouter: any;
+  let mockAuthService: jasmine.SpyObj<AuthService>;
+  let mockRouter: jasmine.SpyObj<Router>;
 
   beforeEach(async () => {
-    mockAuthService = {
-      login: vi.fn(),
-      setToken: vi.fn()
-    };
-    mockRouter = {
-      navigate: vi.fn()
-    };
+    mockAuthService = jasmine.createSpyObj<AuthService>('AuthService', ['login', 'setToken']);
+    mockRouter = jasmine.createSpyObj<Router>('Router', ['navigate']);
 
     await TestBed.configureTestingModule({
       imports: [LoginComponent, ReactiveFormsModule, CommonModule],
@@ -50,7 +44,7 @@ describe('LoginComponent', () => {
   it('should call authService.login and navigate on success', () => {
     component.loginForm.controls['email'].setValue('test@example.com');
     component.loginForm.controls['password'].setValue('password123');
-    mockAuthService.login.mockReturnValue(of({ token: 'fake-jwt-token' }));
+    mockAuthService.login.and.returnValue(of({ token: 'fake-jwt-token' }));
 
     component.onSubmit();
 
@@ -62,7 +56,9 @@ describe('LoginComponent', () => {
   it('should set error message on login failure', () => {
     component.loginForm.controls['email'].setValue('wrong@example.com');
     component.loginForm.controls['password'].setValue('wrongpass');
-    mockAuthService.login.mockReturnValue(throwError(() => ({ error: { error: 'Invalid credentials' } })));
+    mockAuthService.login.and.returnValue(
+      throwError(() => ({ error: { error: 'Invalid credentials' } }))
+    );
 
     component.onSubmit();
 
