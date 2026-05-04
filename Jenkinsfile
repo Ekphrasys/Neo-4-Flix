@@ -8,7 +8,6 @@ pipeline {
     tools {
         maven 'MAVEN'
         jdk 'JDK17'
-        nodejs 'node18'
     }
 
     environment {
@@ -38,9 +37,13 @@ pipeline {
 
         stage('FRONTEND : Build & Test') {
             steps {
-                dir('frontend') {
-                    sh 'npm ci'
-                    sh 'npm run build'
+                nodejs(nodeJSInstallationName: 'node22', configId: '') {
+                    dir('frontend') {
+                        sh 'node -v'
+                        sh 'npm -v'
+                        sh 'npm ci'
+                        sh 'npm run build'
+                    }
                 }
             }
         }
@@ -49,8 +52,11 @@ pipeline {
             steps {
                 script {
                     def scannerHome = tool 'SonarQubeScanner'
-                    withSonarQubeEnv('SonarQube') { 
-                        sh "${scannerHome}/bin/sonar-scanner"
+                    withSonarQubeEnv('SonarQube') {
+                        nodejs(nodeJSInstallationName: 'node18', configId: '') {
+                            sh 'node -v'
+                            sh "${scannerHome}/bin/sonar-scanner"
+                        }
                     }
                 }
             }
