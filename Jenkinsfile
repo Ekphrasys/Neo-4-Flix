@@ -41,7 +41,7 @@ pipeline {
                     sh '''
                         export HOME=/tmp/jenkins-home
                         npm ci
-                        npm test -- --watch=false --browsers=ChromeHeadlessCI --code-coverage --reporters=progress,coverage
+                        npm test -- --browsers=ChromeHeadlessNoSandbox
                     '''
                 }
             }

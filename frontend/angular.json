@@ -68,7 +68,8 @@
             "runner": "karma",
             "runnerConfig": "karma.conf.js",
             "tsConfig": "tsconfig.spec.json",
-            "coverage": true
+            "coverage": true,
+            "watch": false
           }
         }
       }
