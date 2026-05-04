@@ -1,0 +1,108 @@
+.page {
+  padding: 2rem 5%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.page__header {
+  margin-bottom: 2rem;
+}
+
+.page__header h1 {
+  font-size: 2.2rem;
+  margin: 0;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* Status messages */
+.status {
+  font-size: 1.1rem;
+  color: var(--n4f-text-muted);
+  text-align: center;
+  padding: 3rem;
+}
+
+.status--error {
+  color: var(--n4f-accent);
+}
+
+/* Horizontal scrolling wrapper (Netflix style row) */
+.movies {
+  display: flex;
+  gap: 1.25rem;
+  padding: 1.5rem 0 2.5rem;
+  margin: 0;
+  list-style: none;
+  overflow-x: auto;
+  overflow-y: visible;
+  scroll-snap-type: x mandatory;
+  /* Hide scrollbar */
+  scrollbar-width: none;
+}
+
+.movies::-webkit-scrollbar {
+  display: none;
+}
+
+/* Individual movie card */
+.movies__item {
+  flex: 0 0 240px;
+  min-height: 180px;
+  background: linear-gradient(180deg, var(--n4f-surface) 0%, rgba(20, 20, 20, 1) 100%);
+  border-radius: var(--n4f-radius-sm);
+  padding: 1.25rem;
+  color: var(--n4f-text);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, z-index 0.3s ease;
+  border: 1px solid var(--n4f-border);
+  cursor: pointer;
+  scroll-snap-align: start;
+  position: relative;
+}
+
+.movies__item:hover {
+  transform: scale(1.08) translateY(-4px);
+  z-index: 10;
+  box-shadow: var(--n4f-shadow);
+  border-color: rgba(255, 255, 255, 0.25);
+  background: linear-gradient(180deg, var(--n4f-surface-2) 0%, var(--n4f-bg) 100%);
+}
+
+.movies__title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
+}
+
+.movies__year {
+  color: var(--n4f-text-muted);
+  font-size: 0.9rem;
+  font-weight: 400;
+  margin-left: 0.3rem;
+}
+
+.movies__meta {
+  font-size: 0.85rem;
+  color: var(--n4f-accent);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 0.2rem;
+}
+
+.movies__desc {
+  font-size: 0.85rem;
+  color: var(--n4f-text-muted);
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-grow: 1;
+}
