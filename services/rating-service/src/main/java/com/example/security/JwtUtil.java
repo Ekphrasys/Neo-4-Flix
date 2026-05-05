@@ -23,24 +23,23 @@ public class JwtUtil {
     private static final long EXP_MS = 1000L * 60 * 60 * 24;
 
     private static Key getSigningKey() {
-        byte[] keyBytes = SECRET.getBytes();
-        return Keys.hmacShaKeyFor(keyBytes);
+        return Keys.hmacShaKeyFor(SECRET.getBytes());
     }
 
     public static String generateToken(String userId, String role, String name) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("sub", userId);
-        claims.put("role", role != null ? role : "USER");
+        var builder = Jwts.builder()
+            .claim("sub", userId)
+            .claim("role", role != null ? role : "USER");
+
         if (name != null && !name.isBlank()) {
-            claims.put("name", name);
+            builder.claim("name", name);
         }
 
-        return Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXP_MS))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
-                .compact();
+        return builder
+            .setIssuedAt(new Date())
+            .setExpiration(new Date(System.currentTimeMillis() + EXP_MS))
+            .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+            .compact();
     }
 
     public static Claims parseToken(String token) {
