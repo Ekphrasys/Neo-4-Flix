@@ -25,7 +25,7 @@ pipeline {
         stage('SERVICES : Build & Test') {
             steps {
                 script {
-                    def services = ['movie-service', 'user-service']
+                    def services = ['movie-service', 'user-service', 'rating-service']
                     for (service in services) {
                         dir("services/${service}") {
                             sh "mvn clean install dependency:copy-dependencies"
