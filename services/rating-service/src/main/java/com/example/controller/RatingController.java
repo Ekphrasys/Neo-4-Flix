@@ -24,6 +24,7 @@ import java.util.Optional;
 public class RatingController {
     private final RatingRepository ratingRepository;
     private static final String ERROR_KEY = "error";
+    private static final String NOTFOUND_KEY = "Rating not found";
 
     public RatingController(RatingRepository ratingRepository) {
         this.ratingRepository = ratingRepository;
@@ -35,10 +36,10 @@ public class RatingController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getRatingById(@PathVariable Long id) {
+    public ResponseEntity<Object> getRatingById(@PathVariable Long id) {
         Optional<Rating> rating = ratingRepository.findById(id);
         if (rating.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error("Rating not found"));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error(NOTFOUND_KEY));
         }
         return ResponseEntity.ok(rating.get());
     }
@@ -54,7 +55,7 @@ public class RatingController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createRating(@RequestBody Rating rating) {
+    public ResponseEntity<Object> createRating(@RequestBody Rating rating) {
         if (rating.getMovie() == null || rating.getMovie().getId() == null) {
             return ResponseEntity.badRequest().body(error("Movie id is required"));
         }
@@ -62,7 +63,7 @@ public class RatingController {
     }
 
     @PostMapping("/movie/{movieId}")
-    public ResponseEntity<?> createRatingForMovie(@PathVariable Long movieId, @RequestBody Rating rating) {
+    public ResponseEntity<Object> createRatingForMovie(@PathVariable Long movieId, @RequestBody Rating rating) {
         if (rating == null) {
             return ResponseEntity.badRequest().body(error("Rating payload is required"));
         }
@@ -73,10 +74,10 @@ public class RatingController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateRating(@PathVariable Long id, @RequestBody Rating payload) {
+    public ResponseEntity<Object> updateRating(@PathVariable Long id, @RequestBody Rating payload) {
         Optional<Rating> existing = ratingRepository.findById(id);
         if (existing.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error("Rating not found"));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error(NOTFOUND_KEY));
         }
 
         Rating rating = existing.get();
@@ -89,9 +90,9 @@ public class RatingController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteRating(@PathVariable Long id) {
+    public ResponseEntity<Object> deleteRating(@PathVariable Long id) {
         if (!ratingRepository.existsById(id)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error("Rating not found"));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error(NOTFOUND_KEY));
         }
         ratingRepository.deleteById(id);
         return ResponseEntity.noContent().build();
