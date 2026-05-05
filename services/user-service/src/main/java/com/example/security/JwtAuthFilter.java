@@ -17,7 +17,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) 
         throws ServletException, IOException {
-        String header = request.getHeader("Authorization");
         if (request.getHeader("Authorization") != null && request.getHeader("Authorization").startsWith("Bearer ")) {
             String token = request.getHeader("Authorization").replace("Bearer ", "");
             try {
