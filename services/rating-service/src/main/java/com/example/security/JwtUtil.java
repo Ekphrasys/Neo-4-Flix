@@ -24,12 +24,7 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(SECRET.getBytes());
     }
 
-    /**
-     * Génère un JWT pour un utilisateur authentifié.
-     * <p>
-     * Note: le paramètre {@code role} est conservé pour compatibilité, mais les rôles ne sont plus encodés dans le JWT.
-     */
-    public static String generateToken(String userId, String role, String name) {
+    public static String generateToken(String userId, String name) {
         var builder = Jwts.builder()
             .setSubject(userId);
 

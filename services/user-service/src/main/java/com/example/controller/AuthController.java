@@ -32,7 +32,7 @@ public class AuthController {
         String hashed = passwordEncoder.encode(password);
         User u = new User(username, email, hashed);
         userRepository.save(u);
-        String token = JwtUtil.generateToken(String.valueOf(u.getId()), null, u.getUsername());
+        String token = JwtUtil.generateToken(String.valueOf(u.getId()), u.getUsername());
         return ResponseEntity.ok(Map.of("token", token, "userId", String.valueOf(u.getId())));
     }
 
@@ -50,7 +50,7 @@ public class AuthController {
         if (displayName == null || displayName.isBlank()) {
             displayName = u.getEmail();
         }
-        String token = JwtUtil.generateToken(String.valueOf(u.getId()), null, displayName);
+        String token = JwtUtil.generateToken(String.valueOf(u.getId()), displayName);
         return ResponseEntity.ok(Map.of("token", token, "userId", String.valueOf(u.getId())));
     }
 }
