@@ -7,8 +7,6 @@ import io.jsonwebtoken.security.Keys;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class JwtUtil {
     private static final String JWT_KEY = "JWT_SECRET_KEY";
@@ -26,10 +24,14 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(SECRET.getBytes());
     }
 
+    /**
+     * Génère un JWT pour un utilisateur authentifié.
+     * <p>
+     * Note: le paramètre {@code role} est conservé pour compatibilité, mais les rôles ne sont plus encodés dans le JWT.
+     */
     public static String generateToken(String userId, String role, String name) {
         var builder = Jwts.builder()
-            .claim("sub", userId)
-            .claim("role", role != null ? role : "USER");
+            .setSubject(userId);
 
         if (name != null && !name.isBlank()) {
             builder.claim("name", name);

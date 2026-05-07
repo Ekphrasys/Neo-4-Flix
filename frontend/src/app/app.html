@@ -3,8 +3,8 @@
     <a class="brand" routerLink="/movies" aria-label="Neo-4-Flix home">Neo-4-Flix</a>
 
     <nav class="nav" aria-label="Main navigation">
-      <a routerLink="/movies" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Movies</a>
       @if (isLoggedIn$ | async) {
+        <a routerLink="/movies" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Movies</a>
         <button type="button" class="logout-btn" (click)="logout()">Logout</button>
       } @else {
         <a routerLink="/login" routerLinkActive="active">Login</a>
