@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 
 import { MovieListComponent } from './movie-list.component';
@@ -15,7 +16,7 @@ describe('MovieListComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [MovieListComponent],
-      providers: [{ provide: MovieService, useValue: movieServiceSpy }],
+      providers: [provideRouter([]), { provide: MovieService, useValue: movieServiceSpy }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MovieListComponent);

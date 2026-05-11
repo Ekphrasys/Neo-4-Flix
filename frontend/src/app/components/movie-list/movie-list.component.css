@@ -31,7 +31,7 @@
 .movies {
   display: flex;
   gap: 1.25rem;
-  padding: 1.5rem 0 2.5rem;
+  padding: 1.5rem 1rem 1.5rem;
   margin: 0;
   list-style: none;
   overflow-x: auto;

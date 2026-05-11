@@ -82,6 +82,26 @@
   border-color: rgb(205, 19, 19);
 }
 
+.back-btn {
+   font-weight: 650;
+   font-size: 20px;
+   color: var(--n4f-text-muted);
+   padding: 0.35rem 0.5rem;
+   background: transparent;
+   border-radius: 999px;
+   border: 2px solid transparent;
+}
+
+.back-btn::first-letter {
+  color: var(--n4f-accent);
+}
+
+.back-btn:hover {
+   cursor: pointer;
+   background: rgba(255, 255, 255, 0.06);
+   border-color: rgba(255, 255, 255, 0.12);
+}
+
 .container {
   max-width: var(--n4f-container);
   margin: 0 auto;

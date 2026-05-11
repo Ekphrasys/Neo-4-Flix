@@ -1,1 +1,17 @@
-/* TODO: Implement movie detail component styles */
+.movie_details {
+  margin-top: 1.5rem;
+  flex: 0 0 240px;
+  min-height: 180px;
+  background: linear-gradient(180deg, var(--n4f-surface) 0%, rgba(20, 20, 20, 1) 100%);
+  border-radius: var(--n4f-radius-sm);
+  padding: 0.5rem 1.25rem;
+  color: var(--n4f-text);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, z-index 0.3s ease;
+  border: 1px solid var(--n4f-border);
+  cursor: pointer;
+  scroll-snap-align: start;
+  position: relative;
+}

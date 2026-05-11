@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { MovieService } from '../../services/movie.service';
 
@@ -23,7 +24,14 @@ import { MovieService } from '../../services/movie.service';
 		} @else {
 		  <ul class="movies" aria-label="Movie list">
 			@for (m of movies; track m.id) {
-			  <li class="movies__item">
+			  <li
+				class="movies__item"
+				role="link"
+				tabindex="0"
+				(click)="openMovie(m)"
+				(keydown.enter)="openMovie(m)"
+				(keydown.space)="openMovie(m)"
+			  >
 				<div class="movies__title">
 				  {{ m.title }}
 				  @if (m.releaseYear) {
@@ -52,7 +60,10 @@ export class MovieListComponent implements OnInit {
   loading = signal<boolean>(true);
   error = signal<string | null>(null);
 
-  constructor(private movieService: MovieService) {}
+  constructor(
+	private movieService: MovieService,
+	private router: Router
+  ) {}
 
   ngOnInit(): void {
 	this.reload();
@@ -75,6 +86,12 @@ export class MovieListComponent implements OnInit {
 		this.loading.set(false);
 	  }
 	});
+  }
+
+  openMovie(movie: any): void {
+	const id = movie?.id;
+	if (typeof id !== 'number' && typeof id !== 'string') return;
+	this.router.navigate(['/movies', id]);
   }
 }
 
