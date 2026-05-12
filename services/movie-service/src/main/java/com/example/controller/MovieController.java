@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.model.Genre;
 import com.example.model.Movie;
 import com.example.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,33 @@ public class MovieController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Movie>> getAllMovies() {
-        return ResponseEntity.ok(movieService.getAllMovies());
+    public ResponseEntity<List<Movie>> getAllMovies(
+            @RequestParam(value = "q", required = false) String q,
+            @RequestParam(value = "title", required = false) String title,
+            @RequestParam(value = "genre", required = false) Genre genre,
+            @RequestParam(value = "releaseYearFrom", required = false) Integer releaseYearFrom,
+            @RequestParam(value = "releaseYearTo", required = false) Integer releaseYearTo
+    ) {
+        q = normalizeBlank(q);
+        title = normalizeBlank(title);
+
+        // Validation minimaliste des bornes
+        if (releaseYearFrom != null && releaseYearTo != null && releaseYearFrom > releaseYearTo) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        boolean hasFilters = q != null || title != null || genre != null || releaseYearFrom != null || releaseYearTo != null;
+        if (!hasFilters) {
+            return ResponseEntity.ok(movieService.getAllMovies());
+        }
+
+        return ResponseEntity.ok(movieService.searchMovies(q, title, genre, releaseYearFrom, releaseYearTo));
+    }
+
+    private static String normalizeBlank(String s) {
+        if (s == null) return null;
+        String trimmed = s.trim();
+        return trimmed.isEmpty() ? null : trimmed;
     }
 
     @GetMapping("/{id}")

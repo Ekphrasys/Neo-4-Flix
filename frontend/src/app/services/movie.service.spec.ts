@@ -47,4 +47,31 @@ describe('MovieService', () => {
     expect(req.request.method).toBe('GET');
     req.flush(payload);
   });
+
+  it('searches movies with query params', () => {
+    const payload = [{ id: 7, title: 'The Matrix' }];
+
+    service
+      .searchMovies({
+        q: 'matrix',
+        genre: 'SCI_FI',
+        releaseYearFrom: 1990,
+        releaseYearTo: 2000,
+      })
+      .subscribe((movies) => {
+        expect(movies).toEqual(payload);
+      });
+
+    const req = httpMock.expectOne((r) => {
+      return (
+        r.url === baseUrl &&
+        r.params.get('q') === 'matrix' &&
+        r.params.get('genre') === 'SCI_FI' &&
+        r.params.get('releaseYearFrom') === '1990' &&
+        r.params.get('releaseYearTo') === '2000'
+      );
+    });
+    expect(req.request.method).toBe('GET');
+    req.flush(payload);
+  });
 });

@@ -11,8 +11,12 @@ describe('MovieListComponent', () => {
   let movieServiceSpy: jasmine.SpyObj<MovieService>;
 
   beforeEach(async () => {
-    movieServiceSpy = jasmine.createSpyObj<MovieService>('MovieService', ['getAllMovies']);
+    movieServiceSpy = jasmine.createSpyObj<MovieService>('MovieService', [
+      'getAllMovies',
+      'searchMovies',
+    ]);
     movieServiceSpy.getAllMovies.and.returnValue(of([]));
+    movieServiceSpy.searchMovies.and.returnValue(of([]));
 
     await TestBed.configureTestingModule({
       imports: [MovieListComponent],
@@ -48,5 +52,19 @@ describe('MovieListComponent', () => {
     expect(component.movies).toEqual([]);
     expect(component.loading()).toBeFalse();
     expect(component.error()).toBe('Network unavailable');
+  });
+
+  it('triggers search when filters change', (done) => {
+    const payload = [{ id: 1, title: 'Inception' }];
+    movieServiceSpy.searchMovies.and.returnValue(of(payload));
+
+    component.ngOnInit();
+
+    component.filters.controls.q.setValue('incep');
+
+	setTimeout(() => {
+	  expect(movieServiceSpy.searchMovies).toHaveBeenCalled();
+	  done();
+	}, 350);
   });
 });
