@@ -1,1 +1,26 @@
 /* Register component styles (mostly in global styles) */
+
+.password-rules {
+  list-style: none;
+  padding: 0.5rem 0 0 0;
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.password-rules li {
+  transition: color 0.2s ease;
+}
+
+.password-rules li.pass {
+  color: #4caf50;
+}
+
+.password-rules li.fail {
+  color: #f44336;
+}
+
+button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

@@ -40,14 +40,15 @@ describe('RegisterComponent', () => {
 
     component.name = 'sam';
     component.email = 'sam@example.com';
-    component.password = '123456';
+    component.password = 'Pass1!aa';
+    component.validatePassword();
     component.register(event);
 
     expect(event.preventDefault).toHaveBeenCalled();
     expect(authServiceSpy.register).toHaveBeenCalledWith({
       name: 'sam',
       email: 'sam@example.com',
-      password: '123456',
+      password: 'Pass1!aa',
     });
     expect(authServiceSpy.setToken).toHaveBeenCalledWith('new-token');
     expect(router.navigate).toHaveBeenCalledWith(['/']);
@@ -61,6 +62,8 @@ describe('RegisterComponent', () => {
     const event = new Event('submit');
     spyOn(event, 'preventDefault');
 
+    component.password = 'Pass1!aa';
+    component.validatePassword();
     component.register(event);
 
     expect(component.error).toBe('Account already exists');

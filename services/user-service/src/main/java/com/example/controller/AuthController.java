@@ -3,10 +3,12 @@ package com.example.controller;
 import com.example.model.User;
 import com.example.repository.UserRepository;
 import com.example.security.JwtUtil;
+import com.example.validation.PasswordValidator;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -25,6 +27,11 @@ public class AuthController {
         String username = body.get("username");
         String email = body.get("email");
         String password = body.get("password");
+
+        List<String> passwordErrors = PasswordValidator.validate(password);
+        if (!passwordErrors.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of(ERROR_KEY, String.join("; ", passwordErrors)));
+        }
 
         if (!userRepository.findByEmail(email).isEmpty()) {
             return ResponseEntity.badRequest().body(Map.of(ERROR_KEY, "Email already in use"));

@@ -48,7 +48,7 @@ class UserControllerTest {
         Map<String, String> payload = Map.of(
                 "username", "neo-user",
                 "email", "new@neo4flix.com",
-                "password", "password123"
+                "password", "Password1!"
         );
 
         mockMvc.perform(post("/api/auth/register")
@@ -60,6 +60,21 @@ class UserControllerTest {
     }
 
     @Test
+    void registerShouldRejectWeakPassword() throws Exception {
+        Map<String, String> payload = Map.of(
+                "username", "neo-user",
+                "email", "weak@neo4flix.com",
+                "password", "weak"
+        );
+
+        mockMvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(payload)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", not(blankOrNullString())));
+    }
+
+    @Test
     void registerShouldReturnBadRequestWhenEmailAlreadyExists() throws Exception {
         Mockito.when(userRepository.findByEmail("existing@neo4flix.com"))
                 .thenReturn(List.of(new User("existing", "existing@neo4flix.com", "hash")));
@@ -67,7 +82,7 @@ class UserControllerTest {
         Map<String, String> payload = Map.of(
                 "username", "neo-user",
                 "email", "existing@neo4flix.com",
-                "password", "password123"
+                "password", "Password1!"
         );
 
         mockMvc.perform(post("/api/auth/register")
