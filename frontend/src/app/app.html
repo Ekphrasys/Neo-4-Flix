@@ -5,6 +5,7 @@
     <nav class="nav" aria-label="Main navigation">
       @if (isLoggedIn$ | async) {
         <a routerLink="/movies" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Movies</a>
+        <a routerLink="/watchlist" routerLinkActive="active">Watchlist</a>
         <button type="button" class="logout-btn" (click)="logout()">Logout</button>
       } @else {
         <a routerLink="/login" routerLinkActive="active">Login</a>

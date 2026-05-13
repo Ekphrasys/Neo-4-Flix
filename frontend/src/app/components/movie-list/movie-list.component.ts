@@ -6,6 +6,7 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { MovieSearchParams, MovieService } from '../../services/movie.service';
+import { WatchlistService } from '../../services/watchlist.service';
 
 @Component({
   selector: 'app-movie-list',
@@ -82,8 +83,25 @@ import { MovieSearchParams, MovieService } from '../../services/movie.service';
 				@if (m.description) {
 				  <p class="movies__desc">{{ m.description }}</p>
 				}
+
+
+				<button
+				  type="button"
+				  class="btn btn--accent watchlist-btn"
+				  (click)="toggleWatchlist(m, $event)"
+				  [disabled]="watchlistWorkingId() === m.id"
+				>
+				  @if (watchlistWorkingId() === m.id) {
+				    Working…
+				  } @else if (watchlistIds().has(m.id)) {
+				    Remove from watchlist
+				  } @else {
+				    Add to watchlist
+				  }
+				</button>
 			  </li>
 			}
+
 		  </ul>
 		}
 	  }
@@ -95,6 +113,8 @@ export class MovieListComponent implements OnInit {
   movies: any[] = [];
   loading = signal<boolean>(true);
   error = signal<string | null>(null);
+  watchlistWorkingId = signal<number | null>(null);
+  watchlistIds = signal<Set<number>>(new Set<number>());
 
 	private readonly destroyRef = inject(DestroyRef);
 
@@ -117,10 +137,13 @@ export class MovieListComponent implements OnInit {
 
   constructor(
 	private movieService: MovieService,
+	private watchlistService: WatchlistService,
 	private router: Router
   ) {}
 
   ngOnInit(): void {
+	this.loadWatchlistIds();
+
 	this.filters.valueChanges
 	  .pipe(
 		debounceTime(300),
@@ -132,6 +155,22 @@ export class MovieListComponent implements OnInit {
 
 	this.applyFilters();
   }
+
+		  private loadWatchlistIds(): void {
+			this.watchlistService.getMyWatchlist().subscribe({
+			  next: (movies) => {
+				const ids = new Set<number>();
+				for (const m of movies ?? []) {
+				  const id = (m as any)?.id;
+				  if (typeof id === 'number') ids.add(id);
+				}
+				this.watchlistIds.set(ids);
+			  },
+			  error: () => {
+				// Silencieux: si non connecté / 401, on ne bloque pas la page
+			  },
+			});
+		  }
 
 
   reload(): void {
@@ -197,6 +236,32 @@ export class MovieListComponent implements OnInit {
 	const id = movie?.id;
 	if (typeof id !== 'number' && typeof id !== 'string') return;
 	this.router.navigate(['/movies', id]);
+  }
+
+  toggleWatchlist(movie: any, event: Event): void {
+	event.stopPropagation();
+	const id = movie?.id;
+	if (typeof id !== 'number') return;
+
+	this.watchlistWorkingId.set(id);
+	this.error.set(null);
+
+	const isIn = this.watchlistIds().has(id);
+	const req$ = isIn ? this.watchlistService.remove(id) : this.watchlistService.add(id);
+
+	req$.subscribe({
+	  next: () => {
+		const nextSet = new Set(this.watchlistIds());
+		if (isIn) nextSet.delete(id);
+		else nextSet.add(id);
+		this.watchlistIds.set(nextSet);
+		this.watchlistWorkingId.set(null);
+	  },
+	  error: () => {
+		this.watchlistWorkingId.set(null);
+		this.error.set('Failed to update watchlist.');
+	  },
+	});
   }
 }
 

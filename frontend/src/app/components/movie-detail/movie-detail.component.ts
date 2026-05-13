@@ -3,6 +3,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { MovieService } from '../../services/movie.service';
+import { WatchlistService } from '../../services/watchlist.service';
 
 @Component({
   selector: 'app-movie-detail',
@@ -19,6 +20,25 @@ import { MovieService } from '../../services/movie.service';
       <div class="movie_details">
       <header class="page__header">
         <h1>{{ m.title }}</h1>
+
+        <button
+          type="button"
+          class="btn btn--accent watchlist-btn"
+          (click)="toggleWatchlist(m.id)"
+          [disabled]="watchlistBusy()"
+        >
+          @if (watchlistBusy()) {
+            Working…
+          } @else if (inWatchlist()) {
+            Remove from watchlist
+          } @else {
+            Add to watchlist
+          }
+        </button>
+
+        @if (watchlistError()) {
+          <p class="status status--error" role="alert">{{ watchlistError() }}</p>
+        }
       </header>
 
       <div class="movie-detail">
@@ -46,8 +66,13 @@ export class MovieDetailComponent implements OnInit {
   loading = signal<boolean>(true);
   error = signal<string | null>(null);
 
+  inWatchlist = signal<boolean>(false);
+  watchlistBusy = signal<boolean>(false);
+  watchlistError = signal<string | null>(null);
+
   constructor(
     private readonly movieService: MovieService,
+    private readonly watchlistService: WatchlistService,
     private readonly route: ActivatedRoute,
     private readonly router: Router
   ) {}
@@ -56,6 +81,8 @@ export class MovieDetailComponent implements OnInit {
     this.loading.set(true);
     this.error.set(null);
     this.movie.set(null);
+    this.inWatchlist.set(false);
+    this.watchlistError.set(null);
 
     this.movieService.getMovieById(id).subscribe({
       next: (movie) => {
@@ -64,6 +91,14 @@ export class MovieDetailComponent implements OnInit {
           this.movie.set(null);
         } else {
           this.movie.set(movie);
+
+          this.watchlistService.exists(id).subscribe({
+            next: (exists) => this.inWatchlist.set(!!exists),
+            error: () => {
+              // on ne bloque pas l'écran si l'endpoint existe échoue
+              this.inWatchlist.set(false);
+            },
+          });
         }
         this.loading.set(false);
       },
@@ -95,5 +130,26 @@ export class MovieDetailComponent implements OnInit {
 
   backToList(): void {
     this.router.navigate(['/movies']);
+  }
+
+  toggleWatchlist(movieId: number): void {
+    if (!Number.isFinite(movieId)) return;
+    this.watchlistBusy.set(true);
+    this.watchlistError.set(null);
+
+    const req$ = this.inWatchlist()
+      ? this.watchlistService.remove(movieId)
+      : this.watchlistService.add(movieId);
+
+    req$.subscribe({
+      next: () => {
+        this.inWatchlist.set(!this.inWatchlist());
+        this.watchlistBusy.set(false);
+      },
+      error: () => {
+        this.watchlistError.set('Failed to update watchlist.');
+        this.watchlistBusy.set(false);
+      },
+    });
   }
 }
