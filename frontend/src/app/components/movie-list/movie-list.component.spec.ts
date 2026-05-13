@@ -1,21 +1,41 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 
 import { MovieListComponent } from './movie-list.component';
 import { MovieService } from '../../services/movie.service';
+import { WatchlistService } from '../../services/watchlist.service';
 
 describe('MovieListComponent', () => {
   let component: MovieListComponent;
   let fixture: ComponentFixture<MovieListComponent>;
   let movieServiceSpy: jasmine.SpyObj<MovieService>;
+  let watchlistServiceSpy: jasmine.SpyObj<WatchlistService>;
 
   beforeEach(async () => {
-    movieServiceSpy = jasmine.createSpyObj<MovieService>('MovieService', ['getAllMovies']);
+    movieServiceSpy = jasmine.createSpyObj<MovieService>('MovieService', [
+      'getAllMovies',
+      'searchMovies',
+    ]);
     movieServiceSpy.getAllMovies.and.returnValue(of([]));
+    movieServiceSpy.searchMovies.and.returnValue(of([]));
+
+    watchlistServiceSpy = jasmine.createSpyObj<WatchlistService>('WatchlistService', [
+      'add',
+      'remove',
+      'getMyWatchlist',
+    ]);
+    watchlistServiceSpy.add.and.returnValue(of(void 0));
+    watchlistServiceSpy.remove.and.returnValue(of(void 0));
+    watchlistServiceSpy.getMyWatchlist.and.returnValue(of([]));
 
     await TestBed.configureTestingModule({
       imports: [MovieListComponent],
-      providers: [{ provide: MovieService, useValue: movieServiceSpy }],
+      providers: [
+        provideRouter([]),
+        { provide: MovieService, useValue: movieServiceSpy },
+        { provide: WatchlistService, useValue: watchlistServiceSpy },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MovieListComponent);
@@ -47,5 +67,19 @@ describe('MovieListComponent', () => {
     expect(component.movies).toEqual([]);
     expect(component.loading()).toBeFalse();
     expect(component.error()).toBe('Network unavailable');
+  });
+
+  it('triggers search when filters change', (done) => {
+    const payload = [{ id: 1, title: 'Inception' }];
+    movieServiceSpy.searchMovies.and.returnValue(of(payload));
+
+    component.ngOnInit();
+
+    component.filters.controls.q.setValue('incep');
+
+	setTimeout(() => {
+	  expect(movieServiceSpy.searchMovies).toHaveBeenCalled();
+	  done();
+	}, 350);
   });
 });
