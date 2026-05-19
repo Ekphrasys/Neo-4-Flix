@@ -68,4 +68,36 @@ describe('RegisterComponent', () => {
 
     expect(component.error).toBe('Account already exists');
   });
+
+  it('fails if password rules are not met', () => {
+    component.password = 'weak';
+    component.validatePassword();
+
+    expect(component.allRulesPass).toBeFalse();
+    
+    const event = new Event('submit');
+    spyOn(event, 'preventDefault');
+    component.register(event);
+
+    expect(component.error).toBe('Please fix the password requirements above');
+    expect(authServiceSpy.register).not.toHaveBeenCalled();
+  });
+
+  it('validates password correctly', () => {
+    component.password = 'weak';
+    component.validatePassword();
+    expect(component.rules.minLength).toBeFalse();
+    expect(component.rules.uppercase).toBeFalse();
+    expect(component.rules.digit).toBeFalse();
+    expect(component.rules.special).toBeFalse();
+
+    component.password = 'Strong1!';
+    component.validatePassword();
+    expect(component.rules.minLength).toBeTrue();
+    expect(component.rules.uppercase).toBeTrue();
+    expect(component.rules.lowercase).toBeTrue();
+    expect(component.rules.digit).toBeTrue();
+    expect(component.rules.special).toBeTrue();
+    expect(component.allRulesPass).toBeTrue();
+  });
 });
