@@ -13,9 +13,11 @@ export class App {
   protected readonly title = signal('frontend');
 
   isLoggedIn$;
+  currentUser$;
 
   constructor(private authService: AuthService) {
     this.isLoggedIn$ = this.authService.isLoggedIn$;
+    this.currentUser$ = this.authService.currentUser$;
   }
 
   logout(): void {

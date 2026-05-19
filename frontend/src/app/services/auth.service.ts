@@ -25,6 +25,23 @@ export class AuthService {
   register(body: any) { return this.http.post<any>(`${this.base}/register`, body); }
   login(body: any) { return this.http.post<any>(`${this.base}/login`, body); }
 
+  // 2FA methods
+  setup2FA() {
+    return this.http.post<any>(`${this.base}/2fa/setup`, {}, {
+      headers: { Authorization: `Bearer ${this.getToken()}` }
+    });
+  }
+
+  confirm2FA(code: string) {
+    return this.http.post<any>(`${this.base}/2fa/confirm`, { code }, {
+      headers: { Authorization: `Bearer ${this.getToken()}` }
+    });
+  }
+
+  verify2FA(tempToken: string, code: string) {
+    return this.http.post<any>(`${this.base}/verify-2fa`, { tempToken, code });
+  }
+
   getUserData(): any {
       const token = this.getToken();
       if (!token) return null;
