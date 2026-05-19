@@ -17,14 +17,14 @@ export interface MovieSearchParams {
 export class MovieService {
   private readonly baseUrl = 'http://localhost:8082/api/movies';
 
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient) { }
 
   getAllMovies(): Observable<any> {
-	return this.http.get(this.baseUrl);
+    return this.http.get(this.baseUrl);
   }
 
   getMovieById(id: number): Observable<any> {
-	return this.http.get(`${this.baseUrl}/${id}`);
+    return this.http.get(`${this.baseUrl}/${id}`);
   }
 
   searchMovies(params: MovieSearchParams): Observable<any> {
@@ -37,6 +37,10 @@ export class MovieService {
     if (params.releaseYearTo != null) httpParams = httpParams.set('releaseYearTo', String(params.releaseYearTo));
 
     return this.http.get(this.baseUrl, { params: httpParams });
+  }
+
+  createMovie(movie: any): Observable<any> {
+    return this.http.post(this.baseUrl, movie);
   }
 }
 

@@ -3,20 +3,21 @@
     <div style="display: flex; align-items: baseline; gap: 1rem;">
       <a class="brand" routerLink="/movies" aria-label="Neo-4-Flix home">Neo-4-Flix</a>
       @if (currentUser$ | async; as user) {
-        <span class="welcome-msg" style="color: var(--text-secondary, #b3b3b3); font-size: 0.9rem;">
-          Welcome, <strong>{{ user.name || user.sub }}</strong>!
-        </span>
+      <span class="welcome-msg" style="color: var(--text-secondary, #b3b3b3); font-size: 0.9rem;">
+        Welcome, <strong>{{ user.name || user.sub }}</strong>!
+      </span>
       }
     </div>
 
     <nav class="nav" aria-label="Main navigation">
       @if (isLoggedIn$ | async) {
-        <a routerLink="/movies" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Movies</a>
-        <a routerLink="/watchlist" routerLinkActive="active">Watchlist</a>
-        <button type="button" class="logout-btn" (click)="logout()">Logout</button>
+      <a routerLink="/movies" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Movies</a>
+      <a routerLink="/watchlist" routerLinkActive="active">Watchlist</a>
+      <a routerLink="/create" routerLinkActive="active">Add Movies</a>
+      <button type="button" class="logout-btn" (click)="logout()">Logout</button>
       } @else {
-        <a routerLink="/login" routerLinkActive="active">Login</a>
-        <a routerLink="/register" routerLinkActive="active">Register</a>
+      <a routerLink="/login" routerLinkActive="active">Login</a>
+      <a routerLink="/register" routerLinkActive="active">Register</a>
       }
     </nav>
   </div>
