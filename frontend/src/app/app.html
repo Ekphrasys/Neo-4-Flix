@@ -1,6 +1,13 @@
 <header class="topbar">
   <div class="topbar__inner">
-    <a class="brand" routerLink="/movies" aria-label="Neo-4-Flix home">Neo-4-Flix</a>
+    <div style="display: flex; align-items: baseline; gap: 1rem;">
+      <a class="brand" routerLink="/movies" aria-label="Neo-4-Flix home">Neo-4-Flix</a>
+      @if (currentUser$ | async; as user) {
+        <span class="welcome-msg" style="color: var(--text-secondary, #b3b3b3); font-size: 0.9rem;">
+          Welcome, <strong>{{ user.name || user.sub }}</strong>!
+        </span>
+      }
+    </div>
 
     <nav class="nav" aria-label="Main navigation">
       @if (isLoggedIn$ | async) {

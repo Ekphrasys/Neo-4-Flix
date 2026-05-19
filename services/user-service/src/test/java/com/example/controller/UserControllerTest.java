@@ -3,6 +3,7 @@ package com.example.controller;
 import com.example.model.User;
 import com.example.repository.UserRepository;
 import com.example.security.SecurityConfig;
+import com.example.security.TotpService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -36,19 +37,25 @@ class UserControllerTest {
     @MockBean
     private UserRepository userRepository;
 
+    @MockBean
+    private TotpService totpService;
+
     @Test
-    void registerShouldReturnTokenWhenEmailIsAvailable() throws Exception {
+    void registerShouldReturnTokenAndQrCodeWhenEmailIsAvailable() throws Exception {
         Mockito.when(userRepository.findByEmail("new@neo4flix.com")).thenReturn(List.of());
         Mockito.when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
             User saved = invocation.getArgument(0);
             saved.setId(1L);
             return saved;
         });
+        Mockito.when(totpService.generateSecret()).thenReturn("JBSWY3DPEHPK3PXP");
+        Mockito.when(totpService.buildOtpAuthUri("JBSWY3DPEHPK3PXP", "new@neo4flix.com"))
+                .thenReturn("otpauth://totp/Neo-4-Flix:new%40neo4flix.com?secret=JBSWY3DPEHPK3PXP&issuer=Neo-4-Flix");
 
         Map<String, String> payload = Map.of(
                 "username", "neo-user",
                 "email", "new@neo4flix.com",
-                "password", "password123"
+                "password", "Password1!"
         );
 
         mockMvc.perform(post("/api/auth/register")
@@ -56,7 +63,24 @@ class UserControllerTest {
                         .content(objectMapper.writeValueAsString(payload)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.token", not(blankOrNullString())))
-                .andExpect(jsonPath("$.userId").value("1"));
+                .andExpect(jsonPath("$.userId").value("1"))
+                .andExpect(jsonPath("$.qrCodeUri", not(blankOrNullString())))
+                .andExpect(jsonPath("$.secret").value("JBSWY3DPEHPK3PXP"));
+    }
+
+    @Test
+    void registerShouldRejectWeakPassword() throws Exception {
+        Map<String, String> payload = Map.of(
+                "username", "neo-user",
+                "email", "weak@neo4flix.com",
+                "password", "weak"
+        );
+
+        mockMvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(payload)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", not(blankOrNullString())));
     }
 
     @Test
@@ -67,7 +91,7 @@ class UserControllerTest {
         Map<String, String> payload = Map.of(
                 "username", "neo-user",
                 "email", "existing@neo4flix.com",
-                "password", "password123"
+                "password", "Password1!"
         );
 
         mockMvc.perform(post("/api/auth/register")
