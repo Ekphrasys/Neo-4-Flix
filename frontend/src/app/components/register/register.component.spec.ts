@@ -46,12 +46,12 @@ describe('RegisterComponent', () => {
 
     expect(event.preventDefault).toHaveBeenCalled();
     expect(authServiceSpy.register).toHaveBeenCalledWith({
-      name: 'sam',
+      username: 'sam',
       email: 'sam@example.com',
       password: 'Pass1!aa',
     });
     expect(authServiceSpy.setToken).toHaveBeenCalledWith('new-token');
-    expect(router.navigate).toHaveBeenCalledWith(['/']);
+    expect(router.navigate).toHaveBeenCalledWith(['/2fa-setup']);
     expect(component.error).toBe('');
   });
 
