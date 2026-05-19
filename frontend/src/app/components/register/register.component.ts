@@ -129,8 +129,12 @@ export class RegisterComponent {
       this.error = 'Please fix the password requirements above';
       return;
     }
-    this.auth.register({ name: this.name, email: this.email, password: this.password }).subscribe({
-      next: res => { this.auth.setToken(res.token); this.router.navigate(['/']); },
+    this.auth.register({ username: this.name, email: this.email, password: this.password }).subscribe({
+      next: res => {
+        this.auth.setToken(res.token);
+        // Redirect to 2FA setup so user can scan QR code (2FA is enabled by default)
+        this.router.navigate(['/2fa-setup']);
+      },
       error: err => { this.error = err.error?.error || 'Register failed'; }
     });
   }

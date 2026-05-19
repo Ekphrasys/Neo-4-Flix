@@ -42,6 +42,21 @@ public class JwtUtil {
             .compact();
     }
 
+    /**
+     * Generate a short-lived temporary token for 2FA verification.
+     * Valid for 5 minutes only and marked with purpose "2fa-pending".
+     */
+    public static String generateTempToken(String userId) {
+        long tempExpMs = 1000L * 60 * 5; // 5 minutes
+        return Jwts.builder()
+            .setSubject(userId)
+            .claim("purpose", "2fa-pending")
+            .setIssuedAt(new Date())
+            .setExpiration(new Date(System.currentTimeMillis() + tempExpMs))
+            .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+            .compact();
+    }
+
     public static Claims parseToken(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())

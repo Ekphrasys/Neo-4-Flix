@@ -1,0 +1,84 @@
+/* TwoFactorSetup component styles */
+
+.setup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  text-align: center;
+}
+
+.setup__description {
+  color: var(--text-secondary, #b3b3b3);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  max-width: 380px;
+}
+
+.setup__qr {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1rem;
+  display: inline-flex;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.setup__qr-img {
+  width: 220px;
+  height: 220px;
+  display: block;
+}
+
+.setup__manual {
+  color: var(--text-secondary, #b3b3b3);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.setup__secret {
+  display: inline-block;
+  margin-top: 0.35rem;
+  padding: 0.4rem 0.8rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  font-family: 'Courier New', monospace;
+  font-size: 1rem;
+  letter-spacing: 2px;
+  color: var(--accent, #e50914);
+  user-select: all;
+  word-break: break-all;
+}
+
+.setup--done {
+  padding: 1rem 0;
+}
+
+.setup__check {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #fff;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(34, 197, 94, 0.35);
+}
+
+.spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  border: 3px solid rgba(255, 255, 255, 0.25);
+  border-top-color: rgba(255, 255, 255, 0.95);
+  animation: spin 900ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
