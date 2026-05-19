@@ -7,6 +7,7 @@ import { MovieDetailComponent } from './components/movie-detail/movie-detail.com
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { WatchlistComponent } from './components/watchlist/watchlist.component';
+import { MovieCreateComponent } from './components/create-movie/create-movie.component';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'movies' },
@@ -15,5 +16,6 @@ export const routes: Routes = [
   { path: 'watchlist', component: WatchlistComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'create', component: MovieCreateComponent, canActivate: [AuthGuard] },
   // { path: '**', redirectTo: 'movies' }
 ];
