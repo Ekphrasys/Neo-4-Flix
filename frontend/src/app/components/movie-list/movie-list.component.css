@@ -27,7 +27,7 @@
   color: var(--n4f-accent);
 }
 
-/* Horizontal scrolling wrapper (Netflix style row) */
+/* Horizontal scrolling wrapper (Netflix style row)
 .movies {
   display: flex;
   gap: 1.25rem;
@@ -37,12 +37,20 @@
   overflow-x: auto;
   overflow-y: visible;
   scroll-snap-type: x mandatory;
-  /* Hide scrollbar */
+  Hide scrollbar
   scrollbar-width: none;
 }
 
 .movies::-webkit-scrollbar {
   display: none;
+} */
+
+.movies {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  justify-content: center;
 }
 
 /* Individual movie card */
