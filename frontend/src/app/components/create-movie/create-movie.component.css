@@ -15,3 +15,32 @@
     scroll-snap-align: start;
     position: relative;
 }
+
+.field__label {
+    min-width: 140px;
+    padding: 0.45rem 0.75rem;
+    border-radius: var(--n4f-radius-sm);
+    border: 1px solid var(--n4f-border);
+    background: var(--n4f-surface);
+    color: var(--n4f-text);
+}
+
+.field__label button {
+    background-color:aqua;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.field__label button:hover {
+    background-color: green;
+}
+
+.field__control {
+    min-width: 140px;
+    padding: 0.45rem 0.75rem;
+    border-radius: var(--n4f-radius-sm);
+    border: 1px solid var(--n4f-border);
+    background: var(--n4f-surface);
+    color: var(--n4f-text);
+}

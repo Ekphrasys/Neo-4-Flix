@@ -63,8 +63,10 @@ import { WatchlistService } from '../../services/watchlist.service';
                         placeholder="Description..."
                     ></textarea>
                 </div>
-
-                <button type="submit">Register Movie</button>
+                
+                    <button type="submit" class="field__label">
+                        Register Movie
+                    </button>
             </form>
         </div>
     </section>
