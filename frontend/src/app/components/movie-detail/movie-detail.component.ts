@@ -77,6 +77,8 @@ export class MovieDetailComponent implements OnInit {
     private readonly router: Router
   ) {}
 
+  // test
+
   private loadMovie(id: number): void {
     this.loading.set(true);
     this.error.set(null);
