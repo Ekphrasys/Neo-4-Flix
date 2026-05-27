@@ -54,7 +54,7 @@ public class AuthController {
 
         Map<String, String> response = new HashMap<>();
         response.put("token", token);
-        response.put("userId", u.getId().toString());
+        response.put("userId", u.getId());
         response.put("qrCodeUri", qrCodeUri);
         response.put("secret", secret);
         return ResponseEntity.ok(response);
@@ -73,7 +73,7 @@ public class AuthController {
 
         // If 2FA is enabled, return a temporary token instead of the real JWT
         if (u.isTwoFactorEnabled()) {
-            String tempToken = JwtUtil.generateTempToken(u.getId().toString());
+            String tempToken = JwtUtil.generateTempToken(u.getId());
             Map<String, String> response = new HashMap<>();
             response.put("requires2FA", "true");
             response.put("tempToken", tempToken);
@@ -84,8 +84,8 @@ public class AuthController {
         if (displayName == null || displayName.isBlank()) {
             displayName = u.getEmail();
         }
-        String token = JwtUtil.generateToken(u.getId().toString(), displayName);
-        return ResponseEntity.ok(Map.of("token", token, "userId", u.getId().toString()));
+        String token = JwtUtil.generateToken(u.getId(), displayName);
+        return ResponseEntity.ok(Map.of("token", token, "userId", u.getId()));
     }
 
     /**
@@ -132,8 +132,8 @@ public class AuthController {
         if (displayName == null || displayName.isBlank()) {
             displayName = u.getEmail();
         }
-        String token = JwtUtil.generateToken(u.getId().toString(), displayName);
-        return ResponseEntity.ok(Map.of("token", token, "userId", u.getId().toString()));
+        String token = JwtUtil.generateToken(u.getId(), displayName);
+        return ResponseEntity.ok(Map.of("token", token, "userId", u.getId()));
     }
 
     /**
