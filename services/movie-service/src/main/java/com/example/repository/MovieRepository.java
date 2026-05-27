@@ -8,9 +8,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Repository
-public interface MovieRepository extends Neo4jRepository<Movie, Long> {
+public interface MovieRepository extends Neo4jRepository<Movie, UUID> {
     List<Movie> findByTitle(String title);
 
     @Query(
@@ -34,8 +35,7 @@ public interface MovieRepository extends Neo4jRepository<Movie, Long> {
             @Param("releaseYearTo") Integer releaseYearTo
     );
 
-    @Query("MATCH (u:User) WHERE id(u) = toInteger($userId) " +
-           "MATCH (u)-[r:RATED]->(m:Movie)<-[r2:RATED]-(other:User)-[r3:RATED]->(rec:Movie) " +
+    @Query("MATCH (u:User {id: $userId})-[r:RATED]->(m:Movie)<-[r2:RATED]-(other:User)-[r3:RATED]->(rec:Movie) " +
            "WHERE NOT (u)-[:RATED]->(rec) " +
            "WITH rec, count(other) as commonUsers, avg(r3.rating) as avgRating " +
            "RETURN rec " +

@@ -113,8 +113,8 @@ export class MovieListComponent implements OnInit {
   movies: any[] = [];
   loading = signal<boolean>(true);
   error = signal<string | null>(null);
-  watchlistWorkingId = signal<number | null>(null);
-  watchlistIds = signal<Set<number>>(new Set<number>());
+  watchlistWorkingId = signal<string | null>(null);
+  watchlistIds = signal<Set<string>>(new Set<string>());
 
 	private readonly destroyRef = inject(DestroyRef);
 
@@ -156,21 +156,21 @@ export class MovieListComponent implements OnInit {
 	this.applyFilters();
   }
 
-		  private loadWatchlistIds(): void {
-			this.watchlistService.getMyWatchlist().subscribe({
-			  next: (movies) => {
-				const ids = new Set<number>();
-				for (const m of movies ?? []) {
-				  const id = (m as any)?.id;
-				  if (typeof id === 'number') ids.add(id);
-				}
-				this.watchlistIds.set(ids);
-			  },
-			  error: () => {
-				// Silencieux: si non connecté / 401, on ne bloque pas la page
-			  },
-			});
-		  }
+	  private loadWatchlistIds(): void {
+		this.watchlistService.getMyWatchlist().subscribe({
+		  next: (movies) => {
+			const ids = new Set<string>();
+			for (const m of movies ?? []) {
+			  const id = (m as any)?.id;
+			  if (typeof id === 'string') ids.add(id);
+			}
+			this.watchlistIds.set(ids);
+		  },
+		  error: () => {
+			// Silencieux: si non connecté / 401, on ne bloque pas la page
+		  },
+		});
+	  }
 
 
   reload(): void {
@@ -234,14 +234,14 @@ export class MovieListComponent implements OnInit {
 
   openMovie(movie: any): void {
 	const id = movie?.id;
-	if (typeof id !== 'number' && typeof id !== 'string') return;
+	if (typeof id !== 'string') return;
 	this.router.navigate(['/movies', id]);
   }
 
-  toggleWatchlist(movie: any, event: Event): void {
+   toggleWatchlist(movie: any, event: Event): void {
 	event.stopPropagation();
 	const id = movie?.id;
-	if (typeof id !== 'number') return;
+	if (typeof id !== 'string') return;
 
 	this.watchlistWorkingId.set(id);
 	this.error.set(null);
@@ -262,6 +262,6 @@ export class MovieListComponent implements OnInit {
 		this.error.set('Failed to update watchlist.');
 	  },
 	});
-  }
+   }
 }
 

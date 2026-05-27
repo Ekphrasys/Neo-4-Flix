@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
@@ -30,6 +31,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(RatingController.class)
 @AutoConfigureMockMvc(addFilters = false)
 class RatingControllerTest {
+    private static final UUID uuid1 = UUID.fromString("00000000-0000-0000-0000-000000000001");
+    private static final UUID uuid2 = UUID.fromString("00000000-0000-0000-0000-000000000002");
+    private static final UUID uuid3 = UUID.fromString("00000000-0000-0000-0000-000000000003");
+    private static final UUID MOVIE_UUID = UUID.fromString("00000000-0000-0000-0000-000000000010");
 
     @SpringBootApplication
     static class TestApplication {
@@ -47,38 +52,40 @@ class RatingControllerTest {
 
     @Test
     void getAllRatingsReturnsList() throws Exception {
-        Rating rating = buildRating(1L, 5, 100L, "Inception");
+        Rating rating = buildRating(uuid1, 5, MOVIE_UUID, "Inception");
         when(ratingRepository.findAll()).thenReturn(List.of(rating));
 
         mockMvc.perform(get("/api/ratings"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].id").value(uuid1.toString()))
                 .andExpect(jsonPath("$[0].rating").value(5))
-                .andExpect(jsonPath("$[0].movie.id").value(100));
+                .andExpect(jsonPath("$[0].movie.id").value(MOVIE_UUID.toString()));
     }
 
     @Test
     void getRatingByIdReturnsNotFoundWhenMissing() throws Exception {
-        when(ratingRepository.findById(99L)).thenReturn(Optional.empty());
+        UUID nonExistentId = UUID.fromString("99999999-9999-9999-9999-999999999999");
+        when(ratingRepository.findById(nonExistentId)).thenReturn(Optional.empty());
 
-        mockMvc.perform(get("/api/ratings/99"))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.error").value("Rating not found"));
+        mockMvc.perform(get("/api/ratings/{id}", nonExistentId))
+                .andExpect(status().isNotFound());
     }
 
     @Test
     void createRatingReturnsCreated() throws Exception {
-        Rating payload = buildRating(null, 4, 200L, null);
-        Rating saved = buildRating(10L, 4, 200L, null);
+        UUID uuid4 = UUID.fromString("00000000-0000-0000-0000-000000000004");
+        UUID movieUuid = UUID.fromString("00000000-0000-0000-0000-000000000200");
+        Rating payload = buildRating(null, 4, movieUuid, null);
+        Rating saved = buildRating(uuid4, 4, movieUuid, null);
         when(ratingRepository.save(any(Rating.class))).thenReturn(saved);
 
         mockMvc.perform(post("/api/ratings")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(payload)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(10))
+                .andExpect(jsonPath("$.id").value(uuid4.toString()))
                 .andExpect(jsonPath("$.rating").value(4))
-                .andExpect(jsonPath("$.movie.id").value(200));
+                .andExpect(jsonPath("$.movie.id").value(movieUuid.toString()));
     }
 
     @Test
@@ -96,42 +103,45 @@ class RatingControllerTest {
 
     @Test
     void updateRatingReturnsUpdatedEntity() throws Exception {
-        Rating existing = buildRating(7L, 2, 300L, null);
-        Rating payload = buildRating(null, 5, 301L, null);
-        Rating updated = buildRating(7L, 5, 301L, null);
-        when(ratingRepository.findById(7L)).thenReturn(Optional.of(existing));
+        UUID movieUuid1 = UUID.fromString("00000000-0000-0000-0000-000000000300");
+        UUID movieUuid2 = UUID.fromString("00000000-0000-0000-0000-000000000301");
+        Rating existing = buildRating(uuid3, 2, movieUuid1, null);
+        Rating payload = buildRating(null, 5, movieUuid2, null);
+        Rating updated = buildRating(uuid3, 5, movieUuid2, null);
+        when(ratingRepository.findById(uuid3)).thenReturn(Optional.of(existing));
         when(ratingRepository.save(any(Rating.class))).thenReturn(updated);
 
-        mockMvc.perform(put("/api/ratings/7")
+        mockMvc.perform(put("/api/ratings/{id}", uuid3)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(payload)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(7))
+                .andExpect(jsonPath("$.id").value(uuid3.toString()))
                 .andExpect(jsonPath("$.rating").value(5))
-                .andExpect(jsonPath("$.movie.id").value(301));
+                .andExpect(jsonPath("$.movie.id").value(movieUuid2.toString()));
     }
 
     @Test
     void deleteRatingReturnsNoContentWhenExists() throws Exception {
-        when(ratingRepository.existsById(5L)).thenReturn(true);
-        doNothing().when(ratingRepository).deleteById(5L);
+        when(ratingRepository.existsById(uuid2)).thenReturn(true);
+        doNothing().when(ratingRepository).deleteById(uuid2);
 
-        mockMvc.perform(delete("/api/ratings/5"))
+        mockMvc.perform(delete("/api/ratings/{id}", uuid2))
                 .andExpect(status().isNoContent());
 
-        verify(ratingRepository).deleteById(5L);
+        verify(ratingRepository).deleteById(uuid2);
     }
 
     @Test
     void deleteRatingReturnsNotFoundWhenMissing() throws Exception {
-        when(ratingRepository.existsById(404L)).thenReturn(false);
+        UUID nonExistentId = UUID.fromString("99999999-9999-9999-9999-999999999999");
+        when(ratingRepository.existsById(nonExistentId)).thenReturn(false);
 
-        mockMvc.perform(delete("/api/ratings/404"))
+        mockMvc.perform(delete("/api/ratings/{id}", nonExistentId))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.error").value("Rating not found"));
     }
 
-    private Rating buildRating(Long id, int ratingValue, Long movieId, String title) {
+    private Rating buildRating(UUID id, int ratingValue, UUID movieId, String title) {
         Movie movie = new Movie();
         movie.setId(movieId);
         movie.setTitle(title);

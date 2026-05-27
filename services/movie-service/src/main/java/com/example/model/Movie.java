@@ -5,11 +5,13 @@ import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 
+import java.util.UUID;
+
 @Node("Movie")
 @Data
 public class Movie {
     @Id @GeneratedValue
-    private Long id;
+    private UUID id;
 
     private String title;
     private String description;
@@ -19,7 +21,7 @@ public class Movie {
     public Movie() {
     }
 
-    public Movie(Long id, String title, String description, int releaseYear, Genre genre) {
+    public Movie(UUID id, String title, String description, int releaseYear, Genre genre) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -35,11 +37,11 @@ public class Movie {
         this.title = title;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

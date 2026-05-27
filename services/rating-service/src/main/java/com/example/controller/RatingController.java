@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/ratings")
@@ -36,7 +37,7 @@ public class RatingController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getRatingById(@PathVariable Long id) {
+    public ResponseEntity<Object> getRatingById(@PathVariable UUID id) {
         Optional<Rating> rating = ratingRepository.findById(id);
         if (rating.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error(NOTFOUND_KEY));
@@ -45,7 +46,7 @@ public class RatingController {
     }
 
     @GetMapping("/movie/{movieId}")
-    public ResponseEntity<List<Rating>> getRatingsByMovieId(@PathVariable Long movieId) {
+    public ResponseEntity<List<Rating>> getRatingsByMovieId(@PathVariable UUID movieId) {
         return ResponseEntity.ok(ratingRepository.findByMovieId(movieId));
     }
 
@@ -63,7 +64,7 @@ public class RatingController {
     }
 
     @PostMapping("/movie/{movieId}")
-    public ResponseEntity<Object> createRatingForMovie(@PathVariable Long movieId, @RequestBody Rating rating) {
+    public ResponseEntity<Object> createRatingForMovie(@PathVariable UUID movieId, @RequestBody Rating rating) {
         if (rating == null) {
             return ResponseEntity.badRequest().body(error("Rating payload is required"));
         }
@@ -74,7 +75,7 @@ public class RatingController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateRating(@PathVariable Long id, @RequestBody Rating payload) {
+    public ResponseEntity<Object> updateRating(@PathVariable UUID id, @RequestBody Rating payload) {
         Optional<Rating> existing = ratingRepository.findById(id);
         if (existing.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error(NOTFOUND_KEY));
@@ -90,7 +91,7 @@ public class RatingController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteRating(@PathVariable Long id) {
+    public ResponseEntity<Object> deleteRating(@PathVariable UUID id) {
         if (!ratingRepository.existsById(id)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error(NOTFOUND_KEY));
         }

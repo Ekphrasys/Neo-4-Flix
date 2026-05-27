@@ -10,6 +10,8 @@ describe('MovieService', () => {
   let service: MovieService;
   let httpMock: HttpTestingController;
   const baseUrl = 'http://localhost:8082/api/movies';
+  const movieId1 = '550e8400-e29b-41d4-a716-446655440000';
+  const movieId2 = '550e8400-e29b-41d4-a716-446655440001';
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -25,7 +27,7 @@ describe('MovieService', () => {
   });
 
   it('requests all movies', () => {
-    const payload = [{ id: 1, title: 'Interstellar' }];
+    const payload = [{ id: movieId1, title: 'Interstellar' }];
 
     service.getAllMovies().subscribe((movies) => {
       expect(movies).toEqual(payload);
@@ -37,19 +39,19 @@ describe('MovieService', () => {
   });
 
   it('requests one movie by id', () => {
-    const payload = { id: 7, title: 'The Matrix' };
+    const payload = { id: movieId2, title: 'The Matrix' };
 
-    service.getMovieById(7).subscribe((movie) => {
+    service.getMovieById(movieId2).subscribe((movie) => {
       expect(movie).toEqual(payload);
     });
 
-    const req = httpMock.expectOne(`${baseUrl}/7`);
+    const req = httpMock.expectOne(`${baseUrl}/${movieId2}`);
     expect(req.request.method).toBe('GET');
     req.flush(payload);
   });
 
   it('searches movies with query params', () => {
-    const payload = [{ id: 7, title: 'The Matrix' }];
+    const payload = [{ id: movieId2, title: 'The Matrix' }];
 
     service
       .searchMovies({

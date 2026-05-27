@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class WatchlistService {
@@ -25,7 +26,7 @@ public class WatchlistService {
 		return watchlistRepository.getWatchlist(userId);
 	}
 
-	public void addToWatchlist(String userId, Long movieId) {
+	public void addToWatchlist(String userId, UUID movieId) {
 		requireUserId(userId);
 		requireMovieId(movieId);
 
@@ -37,7 +38,7 @@ public class WatchlistService {
 		watchlistRepository.addToWatchlist(userId, movieId);
 	}
 
-	public void removeFromWatchlist(String userId, Long movieId) {
+	public void removeFromWatchlist(String userId, UUID movieId) {
 		requireUserId(userId);
 		requireMovieId(movieId);
 
@@ -48,7 +49,7 @@ public class WatchlistService {
 		watchlistRepository.removeFromWatchlist(userId, movieId);
 	}
 
-	public boolean existsInWatchlist(String userId, Long movieId) {
+	public boolean existsInWatchlist(String userId, UUID movieId) {
 		requireUserId(userId);
 		requireMovieId(movieId);
 		return watchlistRepository.existsInWatchlist(userId, movieId);
@@ -60,8 +61,8 @@ public class WatchlistService {
 		}
 	}
 
-	private static void requireMovieId(Long movieId) {
-		if (movieId == null || movieId < 0) {
+	private static void requireMovieId(UUID movieId) {
+		if (movieId == null) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid movie id");
 		}
 	}
