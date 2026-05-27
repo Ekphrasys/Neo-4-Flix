@@ -4,28 +4,30 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Node;
 
+import java.util.UUID;
+
 @Node("Movie")
 public class Movie {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private UUID id;
 
     private String title;
 
     public Movie() {
     }
 
-    public Movie(Long id, String title) {
+    public Movie(UUID id, String title) {
         this.id = id;
         this.title = title;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

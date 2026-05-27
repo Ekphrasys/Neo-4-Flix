@@ -11,6 +11,7 @@ describe('MovieListComponent', () => {
   let fixture: ComponentFixture<MovieListComponent>;
   let movieServiceSpy: jasmine.SpyObj<MovieService>;
   let watchlistServiceSpy: jasmine.SpyObj<WatchlistService>;
+  const movieId1 = '550e8400-e29b-41d4-a716-446655440000';
 
   beforeEach(async () => {
     movieServiceSpy = jasmine.createSpyObj<MovieService>('MovieService', [
@@ -47,7 +48,7 @@ describe('MovieListComponent', () => {
   });
 
   it('loads movies and clears loading state', () => {
-    const movies = [{ id: 1, title: 'Inception' }];
+    const movies = [{ id: movieId1, title: 'Inception' }];
     movieServiceSpy.getAllMovies.and.returnValue(of(movies));
 
     component.reload();
@@ -70,7 +71,7 @@ describe('MovieListComponent', () => {
   });
 
   it('triggers search when filters change', (done) => {
-    const payload = [{ id: 1, title: 'Inception' }];
+    const payload = [{ id: movieId1, title: 'Inception' }];
     movieServiceSpy.searchMovies.and.returnValue(of(payload));
 
     component.ngOnInit();

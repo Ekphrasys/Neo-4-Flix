@@ -16,9 +16,11 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.blankOrNullString;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -27,6 +29,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(AuthController.class)
 @Import(SecurityConfig.class)
 class UserControllerTest {
+    private static final UUID uuid1 = UUID.fromString("00000000-0000-0000-0000-000000000001");
+    private static final UUID uuid2 = UUID.fromString("00000000-0000-0000-0000-000000000002");
+    private static final UUID uuid3 = UUID.fromString("00000000-0000-0000-0000-000000000003");
 
     @Autowired
     private MockMvc mockMvc;
@@ -45,7 +50,7 @@ class UserControllerTest {
         Mockito.when(userRepository.findByEmail("new@neo4flix.com")).thenReturn(List.of());
         Mockito.when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
             User saved = invocation.getArgument(0);
-            saved.setId(1L);
+            saved.setId(uuid1.toString());
             return saved;
         });
         Mockito.when(totpService.generateSecret()).thenReturn("JBSWY3DPEHPK3PXP");
@@ -63,7 +68,7 @@ class UserControllerTest {
                         .content(objectMapper.writeValueAsString(payload)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.token", not(blankOrNullString())))
-                .andExpect(jsonPath("$.userId").value("1"))
+                .andExpect(jsonPath("$.userId", is(uuid1.toString())))
                 .andExpect(jsonPath("$.qrCodeUri", not(blankOrNullString())))
                 .andExpect(jsonPath("$.secret").value("JBSWY3DPEHPK3PXP"));
     }
@@ -121,7 +126,7 @@ class UserControllerTest {
     void loginShouldReturnUnauthorizedWhenPasswordIsInvalid() throws Exception {
         String encodedPassword = new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder().encode("correct-password");
         User existingUser = new User("neo-user", "user@neo4flix.com", encodedPassword);
-        existingUser.setId(2L);
+        existingUser.setId(uuid2.toString());
 
         Mockito.when(userRepository.findByEmail("user@neo4flix.com")).thenReturn(List.of(existingUser));
 
@@ -142,7 +147,7 @@ class UserControllerTest {
         String rawPassword = "password123";
         String encodedPassword = new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder().encode(rawPassword);
         User existingUser = new User("neo-user", "user@neo4flix.com", encodedPassword);
-        existingUser.setId(3L);
+        existingUser.setId(uuid3.toString());
 
         Mockito.when(userRepository.findByEmail("user@neo4flix.com")).thenReturn(List.of(existingUser));
 
@@ -156,6 +161,6 @@ class UserControllerTest {
                         .content(objectMapper.writeValueAsString(payload)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.token", not(blankOrNullString())))
-                .andExpect(jsonPath("$.userId").value("3"));
+                .andExpect(jsonPath("$.userId").value(uuid3.toString()));
     }
 }

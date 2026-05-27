@@ -1,15 +1,16 @@
 package com.example.model;
 
 import lombok.Data;
-import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
+
+import java.util.UUID;
 
 @Node("User")
 @Data
 public class User {
-    @Id @GeneratedValue
-    private Long id;
+    @Id
+    private String id;
 
     private String username;
     private String email;
@@ -21,6 +22,7 @@ public class User {
     }
 
     public User(String username, String email, String password) {
+        this.id = UUID.randomUUID().toString();
         this.username = username;
         this.email = email;
         this.password = password;
@@ -34,11 +36,11 @@ public class User {
         this.username = username;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class MovieService {
@@ -34,7 +35,7 @@ public class MovieService {
         return movieRepository.searchMovies(q, title, genre, releaseYearFrom, releaseYearTo);
     }
 
-    public Optional<Movie> getMovieById(Long id) {
+    public Optional<Movie> getMovieById(UUID id) {
         return movieRepository.findById(id);
     }
 
@@ -42,7 +43,7 @@ public class MovieService {
         return movieRepository.save(movie);
     }
 
-    public void deleteMovie(Long id) {
+    public void deleteMovie(UUID id) {
         movieRepository.deleteById(id);
     }
 

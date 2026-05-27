@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/watchlist")
@@ -30,21 +31,21 @@ public class WatchlistController {
     }
 
     @PostMapping("/{movieId}")
-    public ResponseEntity<Void> addToWatchlist(@PathVariable Long movieId, Authentication authentication) {
+    public ResponseEntity<Void> addToWatchlist(@PathVariable UUID movieId, Authentication authentication) {
         String userId = authentication != null ? authentication.getName() : null;
         watchlistService.addToWatchlist(userId, movieId);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{movieId}")
-    public ResponseEntity<Void> removeFromWatchlist(@PathVariable Long movieId, Authentication authentication) {
+    public ResponseEntity<Void> removeFromWatchlist(@PathVariable UUID movieId, Authentication authentication) {
         String userId = authentication != null ? authentication.getName() : null;
         watchlistService.removeFromWatchlist(userId, movieId);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{movieId}/exists")
-    public ResponseEntity<Boolean> exists(@PathVariable Long movieId, Authentication authentication) {
+    public ResponseEntity<Boolean> exists(@PathVariable UUID movieId, Authentication authentication) {
         String userId = authentication != null ? authentication.getName() : null;
         return ResponseEntity.ok(watchlistService.existsInWatchlist(userId, movieId));
     }

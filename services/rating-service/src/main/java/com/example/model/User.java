@@ -4,14 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Node;
 
 @Node("User")
 public class User {
     @Id
-    @GeneratedValue
-    private Long id;
+    private String id;
 
     private String username;
 
@@ -20,17 +18,17 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String username, List<Rating> ratings) {
+    public User(String id, String username, List<Rating> ratings) {
         this.id = id;
         this.username = username;
         this.ratings = ratings;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

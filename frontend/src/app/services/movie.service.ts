@@ -23,7 +23,7 @@ export class MovieService {
     return this.http.get(this.baseUrl);
   }
 
-  getMovieById(id: number): Observable<any> {
+  getMovieById(id: string): Observable<any> {
     return this.http.get(`${this.baseUrl}/${id}`);
   }
 

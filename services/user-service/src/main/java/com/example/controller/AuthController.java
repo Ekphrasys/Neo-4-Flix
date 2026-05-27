@@ -49,12 +49,12 @@ public class AuthController {
         u.setTwoFactorEnabled(true);
 
         userRepository.save(u);
-        String token = JwtUtil.generateToken(String.valueOf(u.getId()), u.getUsername());
+        String token = JwtUtil.generateToken(u.getId().toString(), u.getUsername());
         String qrCodeUri = totpService.buildOtpAuthUri(secret, email);
 
         Map<String, String> response = new HashMap<>();
         response.put("token", token);
-        response.put("userId", String.valueOf(u.getId()));
+        response.put("userId", u.getId());
         response.put("qrCodeUri", qrCodeUri);
         response.put("secret", secret);
         return ResponseEntity.ok(response);
@@ -73,7 +73,7 @@ public class AuthController {
 
         // If 2FA is enabled, return a temporary token instead of the real JWT
         if (u.isTwoFactorEnabled()) {
-            String tempToken = JwtUtil.generateTempToken(String.valueOf(u.getId()));
+            String tempToken = JwtUtil.generateTempToken(u.getId());
             Map<String, String> response = new HashMap<>();
             response.put("requires2FA", "true");
             response.put("tempToken", tempToken);
@@ -84,8 +84,8 @@ public class AuthController {
         if (displayName == null || displayName.isBlank()) {
             displayName = u.getEmail();
         }
-        String token = JwtUtil.generateToken(String.valueOf(u.getId()), displayName);
-        return ResponseEntity.ok(Map.of("token", token, "userId", String.valueOf(u.getId())));
+        String token = JwtUtil.generateToken(u.getId(), displayName);
+        return ResponseEntity.ok(Map.of("token", token, "userId", u.getId()));
     }
 
     /**
@@ -112,7 +112,7 @@ public class AuthController {
             return ResponseEntity.status(401).body(Map.of(ERROR_KEY, "Invalid or expired temporary token"));
         }
 
-        User u = userRepository.findById(Long.parseLong(userId)).orElse(null);
+        User u = userRepository.findById(userId).orElse(null);
         if (u == null) {
             return ResponseEntity.status(401).body(Map.of(ERROR_KEY, "User not found"));
         }
@@ -132,8 +132,8 @@ public class AuthController {
         if (displayName == null || displayName.isBlank()) {
             displayName = u.getEmail();
         }
-        String token = JwtUtil.generateToken(String.valueOf(u.getId()), displayName);
-        return ResponseEntity.ok(Map.of("token", token, "userId", String.valueOf(u.getId())));
+        String token = JwtUtil.generateToken(u.getId(), displayName);
+        return ResponseEntity.ok(Map.of("token", token, "userId", u.getId()));
     }
 
     /**
@@ -207,7 +207,7 @@ public class AuthController {
             String token = authHeader.substring(7);
             var claims = JwtUtil.parseToken(token);
             String userId = claims.getSubject();
-            return userRepository.findById(Long.parseLong(userId)).orElse(null);
+            return userRepository.findById(userId).orElse(null);
         } catch (Exception e) {
             return null;
         }

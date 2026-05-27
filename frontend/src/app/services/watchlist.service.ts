@@ -14,15 +14,15 @@ export class WatchlistService {
     return this.http.get<any[]>(this.baseUrl);
   }
 
-  add(movieId: number): Observable<void> {
+  add(movieId: string): Observable<void> {
     return this.http.post<void>(`${this.baseUrl}/${movieId}`, null);
   }
 
-  remove(movieId: number): Observable<void> {
+  remove(movieId: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${movieId}`);
   }
 
-  exists(movieId: number): Observable<boolean> {
+  exists(movieId: string): Observable<boolean> {
     return this.http.get<boolean>(`${this.baseUrl}/${movieId}/exists`);
   }
 }

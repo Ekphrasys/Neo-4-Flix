@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -31,6 +32,9 @@ import static org.hamcrest.Matchers.*;
 class MovieControllerTest {
     private static String TITLE = "Inception";
     private static String DESC = "description";
+    // Generate stable uuids for testing
+    private static final UUID uuid1 = UUID.fromString("00000000-0000-0000-0000-000000000001");
+    private static final UUID uuid2 = UUID.fromString("00000000-0000-0000-0000-000000000002");
 
     @Autowired
     private MockMvc mockMvc;
@@ -43,8 +47,8 @@ class MovieControllerTest {
 
     @Test
     void testGetAllMovies() throws Exception {
-        Movie m1 = new Movie(1L, TITLE, DESC, 2020, Genre.ACTION);
-        Movie m2 = new Movie(2L, "Interstellar", DESC, 2020, Genre.ACTION);
+        Movie m1 = new Movie(uuid1, TITLE, DESC, 2020, Genre.ACTION);
+        Movie m2 = new Movie(uuid2, "Interstellar", DESC, 2020, Genre.ACTION);
 
         Mockito.when(movieService.getAllMovies()).thenReturn(Arrays.asList(m1, m2));
 
@@ -59,7 +63,7 @@ class MovieControllerTest {
 
     @Test
     void testSearchMoviesWithQueryParams() throws Exception {
-        Movie m1 = new Movie(1L, TITLE, DESC, 2020, Genre.ACTION);
+        Movie m1 = new Movie(uuid1, TITLE, DESC, 2020, Genre.ACTION);
 
         Mockito.when(movieService.searchMovies(anyString(), Mockito.isNull(), Mockito.isNull(), Mockito.isNull(), Mockito.isNull()))
                 .thenReturn(Arrays.asList(m1));
@@ -86,26 +90,28 @@ class MovieControllerTest {
 
     @Test
     void testGetMovieById() throws Exception {
-        Movie movie = new Movie(1L, TITLE, DESC, 2020, Genre.ACTION);
-        Mockito.when(movieService.getMovieById(1L)).thenReturn(Optional.of(movie));
+        Movie movie = new Movie(uuid1, TITLE, DESC, 2020, Genre.ACTION);
+        Mockito.when(movieService.getMovieById(uuid1)).thenReturn(Optional.of(movie));
 
-        mockMvc.perform(get("/api/movies/1"))
+        mockMvc.perform(get("/api/movies/{id}", uuid1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title", is(TITLE)));
     }
 
     @Test
     void testGetMovieByIdNotFound() throws Exception {
-        Mockito.when(movieService.getMovieById(99L)).thenReturn(Optional.empty());
+        UUID nonExistentId = UUID.fromString("99999999-9999-9999-9999-999999999999");
 
-        mockMvc.perform(get("/api/movies/99"))
+        Mockito.when(movieService.getMovieById(nonExistentId)).thenReturn(Optional.empty());
+
+        mockMvc.perform(get("/api/movies/{id}", nonExistentId))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     void testCreateMovie() throws Exception {
         Movie movie = new Movie(null, "Tenet", DESC, 2020, Genre.ACTION);
-        Movie savedMovie = new Movie(1L, "Tenet", DESC, 2020, Genre.ACTION);
+        Movie savedMovie = new Movie(uuid1, "Tenet", DESC, 2020, Genre.ACTION);
 
         Mockito.when(movieService.saveMovie(any(Movie.class))).thenReturn(savedMovie);
 
@@ -113,6 +119,6 @@ class MovieControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(movie)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(1)));
+                .andExpect(jsonPath("$.id", is(uuid1.toString())));
     }
 }
