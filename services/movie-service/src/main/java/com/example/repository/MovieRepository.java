@@ -34,7 +34,8 @@ public interface MovieRepository extends Neo4jRepository<Movie, Long> {
             @Param("releaseYearTo") Integer releaseYearTo
     );
 
-    @Query("MATCH (u:User {userId: $userId})-[r:RATED]->(m:Movie)<-[r2:RATED]-(other:User)-[r3:RATED]->(rec:Movie) " +
+    @Query("MATCH (u:User) WHERE id(u) = toInteger($userId) " +
+           "MATCH (u)-[r:RATED]->(m:Movie)<-[r2:RATED]-(other:User)-[r3:RATED]->(rec:Movie) " +
            "WHERE NOT (u)-[:RATED]->(rec) " +
            "WITH rec, count(other) as commonUsers, avg(r3.rating) as avgRating " +
            "RETURN rec " +

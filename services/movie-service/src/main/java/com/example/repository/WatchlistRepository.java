@@ -12,29 +12,36 @@ import java.util.List;
 public interface WatchlistRepository extends Neo4jRepository<Movie, Long> {
 
     @Query(
-            "MATCH (u:User {userId: $userId})-[:WATCHLIST]->(m:Movie) " +
+            "MATCH (u:User) " +
+            "WHERE id(u) = toInteger($userId) " +
+            "MATCH (u)-[:WATCHLIST]->(m:Movie) " +
             "RETURN m " +
             "ORDER BY m.releaseYear DESC, m.title ASC"
     )
     List<Movie> getWatchlist(@Param("userId") String userId);
 
     @Query(
+            "MATCH (u:User) " +
+            "WHERE id(u) = toInteger($userId) " +
             "MATCH (m:Movie) " +
             "WHERE id(m) = $movieId " +
-            "MERGE (u:User {userId: $userId}) " +
             "MERGE (u)-[:WATCHLIST]->(m)"
     )
     void addToWatchlist(@Param("userId") String userId, @Param("movieId") Long movieId);
 
     @Query(
-            "MATCH (u:User {userId: $userId})-[r:WATCHLIST]->(m:Movie) " +
+            "MATCH (u:User) " +
+            "WHERE id(u) = toInteger($userId) " +
+            "MATCH (u)-[r:WATCHLIST]->(m:Movie) " +
             "WHERE id(m) = $movieId " +
             "DELETE r"
     )
     void removeFromWatchlist(@Param("userId") String userId, @Param("movieId") Long movieId);
 
     @Query(
-            "MATCH (u:User {userId: $userId})-[:WATCHLIST]->(m:Movie) " +
+            "MATCH (u:User) " +
+            "WHERE id(u) = toInteger($userId) " +
+            "MATCH (u)-[:WATCHLIST]->(m:Movie) " +
             "WHERE id(m) = $movieId " +
             "RETURN count(m) > 0"
     )
