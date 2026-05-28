@@ -10,6 +10,7 @@ describe('WatchlistService', () => {
   let service: WatchlistService;
   let httpMock: HttpTestingController;
   const baseUrl = 'http://localhost:8082/api/watchlist';
+  const movieId = '550e8400-e29b-41d4-a716-446655440000';
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -25,7 +26,7 @@ describe('WatchlistService', () => {
   });
 
   it('requests current user watchlist', () => {
-    const payload = [{ id: 1, title: 'Inception' }];
+    const payload = [{ id: movieId, title: 'Inception' }];
 
     service.getMyWatchlist().subscribe((movies) => {
       expect(movies).toEqual(payload);
@@ -37,28 +38,28 @@ describe('WatchlistService', () => {
   });
 
   it('adds a movie', () => {
-    service.add(7).subscribe();
+    service.add(movieId).subscribe();
 
-    const req = httpMock.expectOne(`${baseUrl}/7`);
+    const req = httpMock.expectOne(`${baseUrl}/${movieId}`);
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toBeNull();
     req.flush(null);
   });
 
   it('removes a movie', () => {
-    service.remove(7).subscribe();
+    service.remove(movieId).subscribe();
 
-    const req = httpMock.expectOne(`${baseUrl}/7`);
+    const req = httpMock.expectOne(`${baseUrl}/${movieId}`);
     expect(req.request.method).toBe('DELETE');
     req.flush(null);
   });
 
   it('checks if movie exists in watchlist', () => {
-    service.exists(7).subscribe((exists) => {
+    service.exists(movieId).subscribe((exists) => {
       expect(exists).toBeTrue();
     });
 
-    const req = httpMock.expectOne(`${baseUrl}/7/exists`);
+    const req = httpMock.expectOne(`${baseUrl}/${movieId}/exists`);
     expect(req.request.method).toBe('GET');
     req.flush(true);
   });

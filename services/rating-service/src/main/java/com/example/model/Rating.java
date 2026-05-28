@@ -5,11 +5,13 @@ import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.RelationshipProperties;
 import org.springframework.data.neo4j.core.schema.TargetNode;
 
+import java.util.UUID;
+
 @RelationshipProperties
 public class Rating {
     @Id
     @GeneratedValue
-    private Long id;
+    private UUID id;
 
     private int rating;
 
@@ -19,17 +21,17 @@ public class Rating {
     public Rating() {
     }
 
-    public Rating(Long id, int rating, Movie movie) {
+    public Rating(UUID id, int rating, Movie movie) {
         this.id = id;
         this.rating = rating;
         this.movie = movie;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

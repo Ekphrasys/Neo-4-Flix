@@ -77,14 +77,13 @@ export class MovieDetailComponent implements OnInit {
     private readonly router: Router
   ) {}
 
-  // test
-
-  private loadMovie(id: number): void {
+   private loadMovie(id: string): void {
     this.loading.set(true);
     this.error.set(null);
     this.movie.set(null);
     this.inWatchlist.set(false);
     this.watchlistError.set(null);
+
 
     this.movieService.getMovieById(id).subscribe({
       next: (movie) => {
@@ -115,27 +114,25 @@ export class MovieDetailComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.route.paramMap.subscribe((params) => {
-      const rawId = params.get('id');
-      const id = rawId == null ? NaN : Number(rawId);
+   ngOnInit(): void {
+     this.route.paramMap.subscribe((params) => {
+       const rawId = params.get('id');
+       if (!rawId) {
+         this.error.set('Invalid movie id.');
+         this.loading.set(false);
+         return;
+       }
 
-      if (!Number.isFinite(id)) {
-        this.error.set('Invalid movie id.');
-        this.loading.set(false);
-        return;
-      }
-
-      this.loadMovie(id);
-    });
-  }
+       this.loadMovie(rawId);
+     });
+   }
 
   backToList(): void {
     this.router.navigate(['/movies']);
   }
 
-  toggleWatchlist(movieId: number): void {
-    if (!Number.isFinite(movieId)) return;
+   toggleWatchlist(movieId: string): void {
+     if (!movieId) return;
     this.watchlistBusy.set(true);
     this.watchlistError.set(null);
 

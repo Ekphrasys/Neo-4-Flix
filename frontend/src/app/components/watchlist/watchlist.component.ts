@@ -69,7 +69,7 @@ export class WatchlistComponent implements OnInit {
   movies = signal<any[]>([]);
   loading = signal<boolean>(true);
   error = signal<string | null>(null);
-  removingId = signal<number | null>(null);
+  removingId = signal<null>(null);
 
   constructor(
 	private readonly watchlistService: WatchlistService,
@@ -97,14 +97,14 @@ export class WatchlistComponent implements OnInit {
 
   openMovie(movie: any): void {
 	const id = movie?.id;
-	if (typeof id !== 'number' && typeof id !== 'string') return;
+	if (typeof id !== 'string') return;
 	this.router.navigate(['/movies', id]);
   }
 
   remove(movie: any, event: Event): void {
 	event.stopPropagation();
 	const id = movie?.id;
-	if (typeof id !== 'number') return;
+	// if (typeof id !== 'number') return;
 
 	this.removingId.set(id);
 	this.watchlistService.remove(id).subscribe({
