@@ -7,11 +7,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { MovieSearchParams, MovieService } from '../../services/movie.service';
 import { WatchlistService } from '../../services/watchlist.service';
+import { StarRatingComponent } from '../star-rating/star-rating.component';
 
 @Component({
   selector: 'app-movie-list',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, StarRatingComponent],
   template: `
 	<section class="page">
 	  <header class="page__header">
@@ -84,6 +85,7 @@ import { WatchlistService } from '../../services/watchlist.service';
 				  <p class="movies__desc">{{ m.description }}</p>
 				}
 
+				<app-star-rating [movieId]="m.id" [readonly]="true"></app-star-rating>
 
 				<button
 				  type="button"

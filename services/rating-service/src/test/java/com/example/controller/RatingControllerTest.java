@@ -3,6 +3,7 @@ package com.example.controller;
 import com.example.model.Movie;
 import com.example.model.Rating;
 import com.example.repository.RatingRepository;
+import com.example.repository.RatingStats;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +66,7 @@ class RatingControllerTest {
     @Test
     void getRatingByIdReturnsNotFoundWhenMissing() throws Exception {
         UUID nonExistentId = UUID.fromString("99999999-9999-9999-9999-999999999999");
-        when(ratingRepository.findById(nonExistentId)).thenReturn(Optional.empty());
+        when(ratingRepository.findByUuid(nonExistentId.toString())).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/api/ratings/{id}", nonExistentId))
                 .andExpect(status().isNotFound());
@@ -108,7 +109,7 @@ class RatingControllerTest {
         Rating existing = buildRating(uuid3, 2, movieUuid1, null);
         Rating payload = buildRating(null, 5, movieUuid2, null);
         Rating updated = buildRating(uuid3, 5, movieUuid2, null);
-        when(ratingRepository.findById(uuid3)).thenReturn(Optional.of(existing));
+        when(ratingRepository.findByUuid(uuid3.toString())).thenReturn(Optional.of(existing));
         when(ratingRepository.save(any(Rating.class))).thenReturn(updated);
 
         mockMvc.perform(put("/api/ratings/{id}", uuid3)
@@ -122,23 +123,35 @@ class RatingControllerTest {
 
     @Test
     void deleteRatingReturnsNoContentWhenExists() throws Exception {
-        when(ratingRepository.existsById(uuid2)).thenReturn(true);
-        doNothing().when(ratingRepository).deleteById(uuid2);
+        Rating existing = buildRating(uuid2, 4, MOVIE_UUID, null);
+        when(ratingRepository.findByUuid(uuid2.toString())).thenReturn(Optional.of(existing));
+        doNothing().when(ratingRepository).delete(existing);
 
         mockMvc.perform(delete("/api/ratings/{id}", uuid2))
                 .andExpect(status().isNoContent());
 
-        verify(ratingRepository).deleteById(uuid2);
+        verify(ratingRepository).delete(existing);
     }
 
     @Test
     void deleteRatingReturnsNotFoundWhenMissing() throws Exception {
         UUID nonExistentId = UUID.fromString("99999999-9999-9999-9999-999999999999");
-        when(ratingRepository.existsById(nonExistentId)).thenReturn(false);
+        when(ratingRepository.findByUuid(nonExistentId.toString())).thenReturn(Optional.empty());
 
         mockMvc.perform(delete("/api/ratings/{id}", nonExistentId))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.error").value("Rating not found"));
+    }
+
+    @Test
+    void getAverageRatingReturnsStats() throws Exception {
+        RatingStats mockStats = new RatingStats(4.2, 10L);
+        when(ratingRepository.getAverageRating(MOVIE_UUID.toString())).thenReturn(mockStats);
+
+        mockMvc.perform(get("/api/ratings/movie/{movieId}/average", MOVIE_UUID))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.averageRating").value(4.2))
+                .andExpect(jsonPath("$.totalRatings").value(10));
     }
 
     private Rating buildRating(UUID id, int ratingValue, UUID movieId, String title) {

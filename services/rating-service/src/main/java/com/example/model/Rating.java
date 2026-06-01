@@ -11,7 +11,9 @@ import java.util.UUID;
 public class Rating {
     @Id
     @GeneratedValue
-    private UUID id;
+    private Long internalId;
+
+    private UUID id = UUID.randomUUID();
 
     private int rating;
 
@@ -21,10 +23,18 @@ public class Rating {
     public Rating() {
     }
 
-    public Rating(UUID id, int rating, Movie movie) {
-        this.id = id;
+    public Rating(int rating, Movie movie) {
+        this.id = UUID.randomUUID();
         this.rating = rating;
         this.movie = movie;
+    }
+
+    public Long getInternalId() {
+        return internalId;
+    }
+
+    public void setInternalId(Long internalId) {
+        this.internalId = internalId;
     }
 
     public UUID getId() {

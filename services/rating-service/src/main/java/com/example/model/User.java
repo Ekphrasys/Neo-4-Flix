@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.neo4j.core.schema.Node;
+import org.springframework.data.neo4j.core.schema.Relationship;
 
 @Node("User")
 public class User {
@@ -13,6 +14,7 @@ public class User {
 
     private String username;
 
+    @Relationship(type = "RATED", direction = Relationship.Direction.OUTGOING)
     private List<Rating> ratings = new ArrayList<>();
 
     public User() {
