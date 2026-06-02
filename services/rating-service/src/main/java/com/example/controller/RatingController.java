@@ -3,8 +3,10 @@ package com.example.controller;
 import com.example.model.Movie;
 import com.example.model.Rating;
 import com.example.repository.RatingRepository;
+import com.example.repository.RatingStats;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,7 +40,7 @@ public class RatingController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getRatingById(@PathVariable UUID id) {
-        Optional<Rating> rating = ratingRepository.findById(id);
+        Optional<Rating> rating = ratingRepository.findByUuid(id.toString());
         if (rating.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error(NOTFOUND_KEY));
         }
@@ -76,7 +78,7 @@ public class RatingController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateRating(@PathVariable UUID id, @RequestBody Rating payload) {
-        Optional<Rating> existing = ratingRepository.findById(id);
+        Optional<Rating> existing = ratingRepository.findByUuid(id.toString());
         if (existing.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error(NOTFOUND_KEY));
         }
@@ -92,11 +94,54 @@ public class RatingController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteRating(@PathVariable UUID id) {
-        if (!ratingRepository.existsById(id)) {
+        Optional<Rating> existing = ratingRepository.findByUuid(id.toString());
+        if (existing.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error(NOTFOUND_KEY));
         }
-        ratingRepository.deleteById(id);
+        ratingRepository.delete(existing.get());
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/movie/{movieId}/user")
+    public ResponseEntity<Map<String, Object>> getUserRatingForMovie(@PathVariable UUID movieId, Authentication authentication) {
+        String userId = authentication.getName();
+        Integer rating = ratingRepository.getUserRatingForMovie(userId, movieId.toString());
+        Map<String, Object> response = new HashMap<>();
+        response.put("rating", rating);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/movie/{movieId}/user")
+    public ResponseEntity<Object> saveRatingForMovie(
+            @PathVariable UUID movieId,
+            @RequestBody Map<String, Integer> payload,
+            Authentication authentication) {
+        if (payload == null || !payload.containsKey("rating")) {
+            return ResponseEntity.badRequest().body(error("Rating value is required"));
+        }
+        int rating = payload.get("rating");
+        if (rating < 1 || rating > 5) {
+            return ResponseEntity.badRequest().body(error("Rating must be between 1 and 5"));
+        }
+        String userId = authentication.getName();
+        if (!ratingRepository.isMovieInWatchlist(userId, movieId.toString())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error("You can only rate movies that are in your watchlist."));
+        }
+        ratingRepository.saveRating(userId, movieId.toString(), rating);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/movie/{movieId}/user")
+    public ResponseEntity<Void> deleteUserRatingForMovie(@PathVariable UUID movieId, Authentication authentication) {
+        String userId = authentication.getName();
+        ratingRepository.deleteRating(userId, movieId.toString());
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/movie/{movieId}/average")
+    public ResponseEntity<RatingStats> getAverageRating(@PathVariable UUID movieId) {
+        RatingStats stats = ratingRepository.getAverageRating(movieId.toString());
+        return ResponseEntity.ok(stats);
     }
 
     private Map<String, String> error(String message) {

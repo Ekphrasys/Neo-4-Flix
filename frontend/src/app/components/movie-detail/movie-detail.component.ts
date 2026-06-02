@@ -4,11 +4,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { MovieService } from '../../services/movie.service';
 import { WatchlistService } from '../../services/watchlist.service';
+import { StarRatingComponent } from '../star-rating/star-rating.component';
 
 @Component({
   selector: 'app-movie-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, StarRatingComponent],
   template: `
   <section class="page">
     <button type="button" class="back-btn" (click)="backToList()">Back</button>
@@ -42,6 +43,8 @@ import { WatchlistService } from '../../services/watchlist.service';
       </header>
 
       <div class="movie-detail">
+        <app-star-rating [movieId]="m.id" [inWatchlist]="inWatchlist()"></app-star-rating>
+
         @if (m.releaseYear) {
           <p><strong>Release Year:</strong> {{ m.releaseYear }}</p>
         }
