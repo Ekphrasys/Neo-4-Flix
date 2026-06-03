@@ -196,6 +196,24 @@ public class AuthController {
         return ResponseEntity.ok(Map.of("message", "2FA has been enabled successfully"));
     }
 
+    @GetMapping("/users")
+    public ResponseEntity<List<Map<String, Object>>> searchUsers(@RequestParam(value = "q", required = false) String query) {
+        List<User> users;
+        if (query == null || query.isBlank()) {
+            users = userRepository.findAll();
+        } else {
+            users = userRepository.findByUsernameContainingIgnoreCase(query);
+        }
+        List<Map<String, Object>> result = users.stream().map(u -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", u.getId());
+            map.put("username", u.getUsername());
+            map.put("email", u.getEmail());
+            return map;
+        }).toList();
+        return ResponseEntity.ok(result);
+    }
+
     /**
      * Extract the authenticated user from the Authorization header.
      */

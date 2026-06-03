@@ -77,5 +77,11 @@ export class AuthService {
       return null;
     }
   }
+
+  searchUsers(query: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.base}/users`, {
+      params: query ? { q: query } : {}
+    });
+  }
 }
 

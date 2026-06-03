@@ -8,4 +8,5 @@ import java.util.*;
 public interface UserRepository extends Neo4jRepository<User, String> {
      List<User> findByUsername(String username);
      List<User> findByEmail(String email);
+     List<User> findByUsernameContainingIgnoreCase(String username);
 }

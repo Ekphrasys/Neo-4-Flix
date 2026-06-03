@@ -1,46 +1,88 @@
-.movie_details {
-    margin-top: 1.5rem;
-    flex: 0 0 240px;
-    min-height: 180px;
-    background: linear-gradient(180deg, var(--n4f-surface) 0%, rgba(20, 20, 20, 1) 100%);
-    border-radius: var(--n4f-radius-sm);
-    padding: 0.5rem 1.25rem;
-    color: var(--n4f-text);
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, z-index 0.3s ease;
-    border: 1px solid var(--n4f-border);
-    cursor: pointer;
-    scroll-snap-align: start;
-    position: relative;
+.page {
+  padding: 2rem 5%;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
-.field__label {
-    min-width: 140px;
-    padding: 0.45rem 0.75rem;
-    border-radius: var(--n4f-radius-sm);
-    border: 1px solid var(--n4f-border);
-    background: var(--n4f-surface);
-    color: var(--n4f-text);
+.page h1 {
+  font-size: 2.2rem;
+  margin: 0 0 1.5rem 0;
+  font-weight: 700;
+  color: #fff;
 }
 
-.field__label button {
-    background-color: aqua;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+/* Search input */
+.search-input {
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 2rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--n4f-radius-sm);
+  border: 1px solid var(--n4f-border);
+  background: var(--n4f-surface);
+  color: var(--n4f-text);
+  font-size: 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.field__label button:hover {
-    background-color: green;
+.search-input:focus {
+  outline: none;
+  border-color: var(--n4f-accent);
+  box-shadow: 0 0 0 2px rgba(229, 9, 20, 0.2);
 }
 
-.field__control {
-    min-width: 140px;
-    padding: 0.45rem 0.75rem;
-    border-radius: var(--n4f-radius-sm);
-    border: 1px solid var(--n4f-border);
-    background: var(--n4f-surface);
-    color: var(--n4f-text);
+/* Status messages */
+.status {
+  font-size: 1.1rem;
+  color: var(--n4f-text-muted);
+  text-align: center;
+  padding: 3rem;
+}
+
+/* Users Grid */
+.users-list {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 1rem 0 0 0;
+  padding: 0;
+  gap: 1.25rem;
+  list-style: none;
+}
+
+/* User Card */
+.users__item {
+  flex: 0 0 240px;
+  min-height: 120px;
+  background: linear-gradient(180deg, var(--n4f-surface) 0%, rgba(20, 20, 20, 1) 100%);
+  border-radius: var(--n4f-radius-sm);
+  padding: 1.25rem;
+  color: var(--n4f-text);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  border: 1px solid var(--n4f-border);
+  cursor: pointer;
+}
+
+.users__item:hover {
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: var(--n4f-shadow);
+  border-color: rgba(255, 255, 255, 0.25);
+  background: linear-gradient(180deg, var(--n4f-surface-2) 0%, var(--n4f-bg) 100%);
+}
+
+.users__username {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+}
+
+.users__email {
+  font-size: 0.85rem;
+  color: var(--n4f-text-muted);
+  text-align: center;
 }
