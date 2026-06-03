@@ -9,11 +9,13 @@ import { RegisterComponent } from './components/register/register.component';
 import { WatchlistComponent } from './components/watchlist/watchlist.component';
 import { TwoFactorSetupComponent } from './components/two-factor-setup/two-factor-setup.component';
 import { MovieCreateComponent } from './components/create-movie/create-movie.component';
+import { FriendsComponent } from './components/friends/friends.component';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'movies' },
   { path: 'movies/:id', component: MovieDetailComponent },
   { path: 'movies', component: MovieListComponent },
+  { path: 'friends', component: FriendsComponent, canActivate: [AuthGuard] },
   { path: 'watchlist', component: WatchlistComponent, canActivate: [AuthGuard] },
   { path: '2fa-setup', component: TwoFactorSetupComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },

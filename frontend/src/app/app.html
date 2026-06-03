@@ -13,6 +13,7 @@
       @if (isLoggedIn$ | async) {
       <a routerLink="/movies" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Movies</a>
       <a routerLink="/watchlist" routerLinkActive="active">Watchlist</a>
+      <a routerLink="/friends" routerLinkActive="active">Friends</a>
       <a routerLink="/create" routerLinkActive="active">Add Movies</a>
       <button type="button" class="logout-btn" (click)="logout()">Logout</button>
       } @else {
