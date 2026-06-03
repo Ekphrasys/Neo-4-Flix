@@ -214,6 +214,43 @@ public class AuthController {
         return ResponseEntity.ok(result);
     }
 
+    @PostMapping("/users/{targetUserId}/follow")
+    public ResponseEntity<Map<String, String>> followUser(
+            @RequestHeader("Authorization") String authHeader,
+            @PathVariable String targetUserId) {
+        User u = getUserFromAuth(authHeader);
+        if (u == null) {
+            return ResponseEntity.status(401).body(Map.of(ERROR_KEY, "Unauthorized"));
+        }
+        if (u.getId().equals(targetUserId)) {
+            return ResponseEntity.badRequest().body(Map.of(ERROR_KEY, "You cannot follow yourself"));
+        }
+        userRepository.followUser(u.getId(), targetUserId);
+        return ResponseEntity.ok(Map.of("message", "User followed successfully"));
+    }
+
+    @PostMapping("/users/{targetUserId}/unfollow")
+    public ResponseEntity<Map<String, String>> unfollowUser(
+            @RequestHeader("Authorization") String authHeader,
+            @PathVariable String targetUserId) {
+        User u = getUserFromAuth(authHeader);
+        if (u == null) {
+            return ResponseEntity.status(401).body(Map.of(ERROR_KEY, "Unauthorized"));
+        }
+        userRepository.unfollowUser(u.getId(), targetUserId);
+        return ResponseEntity.ok(Map.of("message", "User unfollowed successfully"));
+    }
+
+    @GetMapping("/users/following")
+    public ResponseEntity<List<String>> getFollowing(@RequestHeader("Authorization") String authHeader) {
+        User u = getUserFromAuth(authHeader);
+        if (u == null) {
+            return ResponseEntity.status(401).build();
+        }
+        List<String> followingIds = userRepository.findFollowingIds(u.getId());
+        return ResponseEntity.ok(followingIds);
+    }
+
     /**
      * Extract the authenticated user from the Authorization header.
      */

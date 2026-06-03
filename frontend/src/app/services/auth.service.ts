@@ -83,5 +83,23 @@ export class AuthService {
       params: query ? { q: query } : {}
     });
   }
+
+  followUser(targetUserId: string): Observable<any> {
+    return this.http.post<any>(`${this.base}/users/${targetUserId}/follow`, {}, {
+      headers: { Authorization: `Bearer ${this.getToken()}` }
+    });
+  }
+
+  unfollowUser(targetUserId: string): Observable<any> {
+    return this.http.post<any>(`${this.base}/users/${targetUserId}/unfollow`, {}, {
+      headers: { Authorization: `Bearer ${this.getToken()}` }
+    });
+  }
+
+  getFollowing(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.base}/users/following`, {
+      headers: { Authorization: `Bearer ${this.getToken()}` }
+    });
+  }
 }
 
