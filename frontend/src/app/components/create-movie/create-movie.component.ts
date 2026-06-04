@@ -65,7 +65,7 @@ import { WatchlistService } from '../../services/watchlist.service';
                 </div>
                 
                     <button type="submit" class="field__label">
-                        Register Movie
+                        Add Movie
                     </button>
             </form>
         </div>
