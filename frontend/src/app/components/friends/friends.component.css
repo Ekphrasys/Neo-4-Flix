@@ -1,0 +1,125 @@
+.page {
+  padding: 2rem 5%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.page h1 {
+  font-size: 2.2rem;
+  margin: 0 0 1.5rem 0;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* Search input */
+.search-input {
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 2rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--n4f-radius-sm);
+  border: 1px solid var(--n4f-border);
+  background: var(--n4f-surface);
+  color: var(--n4f-text);
+  font-size: 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--n4f-accent);
+  box-shadow: 0 0 0 2px rgba(229, 9, 20, 0.2);
+}
+
+/* Status messages */
+.status {
+  font-size: 1.1rem;
+  color: var(--n4f-text-muted);
+  text-align: center;
+  padding: 3rem;
+}
+
+/* Users Grid */
+.users-list {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 1rem 0 0 0;
+  padding: 0;
+  gap: 1.25rem;
+  list-style: none;
+}
+
+/* User Card */
+.users__item {
+  flex: 0 0 240px;
+  min-height: 120px;
+  background: linear-gradient(180deg, var(--n4f-surface) 0%, rgba(20, 20, 20, 1) 100%);
+  border-radius: var(--n4f-radius-sm);
+  padding: 1.25rem;
+  color: var(--n4f-text);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  border: 1px solid var(--n4f-border);
+  cursor: pointer;
+}
+
+.users__item:hover {
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: var(--n4f-shadow);
+  border-color: rgba(255, 255, 255, 0.25);
+  background: linear-gradient(180deg, var(--n4f-surface-2) 0%, var(--n4f-bg) 100%);
+}
+
+.users__username {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+}
+
+.users__email {
+  font-size: 0.85rem;
+  color: var(--n4f-text-muted);
+  text-align: center;
+}
+
+.btn {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  border-radius: var(--n4f-radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background 140ms ease, color 140ms ease, border-color 140ms ease;
+  width: 100%;
+}
+
+.follow-btn {
+  background: var(--n4f-accent);
+  color: #fff;
+}
+
+.follow-btn:hover:not(:disabled) {
+  background: #b80710;
+}
+
+.follow-btn--following {
+  background: transparent;
+  color: var(--n4f-text);
+  border-color: var(--n4f-border);
+}
+
+.follow-btn--following:hover:not(:disabled) {
+  background: rgba(196, 18, 18, 0.1);
+  border-color: rgb(205, 19, 19);
+  color: rgb(205, 19, 19);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
