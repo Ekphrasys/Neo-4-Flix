@@ -1,3 +1,120 @@
 @import '../movie-list/movie-list.component.css';
 
+/* Actions */
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: auto;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--n4f-border, #262626);
+}
+
+.watchlist-btn {
+  flex: 1;
+}
+
+.btn-share {
+  background: var(--n4f-surface-2, #2d2d2d);
+  border: 1px solid var(--n4f-border, #262626);
+  color: #fff;
+}
+
+.btn-share:hover {
+  background: #3d3d3d;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Share Dropdown UI */
+.share-dropdown {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: var(--n4f-surface-2, #2d2d2d);
+  border-radius: var(--n4f-radius-sm, 6px);
+  border: 1px solid var(--n4f-border, #262626);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+  padding: 1.25rem;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  animation: slideUp 0.2s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.share-dropdown h4 {
+  margin: 0;
+  font-size: 1rem;
+  color: #fff;
+  border-bottom: 1px solid var(--n4f-border, #262626);
+  padding-bottom: 0.35rem;
+}
+
+.share-dropdown__no-friends {
+  font-size: 0.85rem;
+  color: var(--n4f-text-muted, #808080);
+  margin: 0.5rem 0;
+}
+
+.friends-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 150px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.friend-btn {
+  width: 100%;
+  text-align: left;
+  background: var(--n4f-surface, #181818);
+  border: 1px solid var(--n4f-border, #262626);
+  padding: 0.5rem 0.75rem;
+  color: var(--n4f-text, #fff);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.friend-btn:hover {
+  background: var(--n4f-surface-2, #2d2d2d);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.friend-btn strong {
+  color: var(--n4f-accent, #e50914);
+}
+
+.btn-cancel-share {
+  background: none;
+  border: 1px solid var(--n4f-accent, #e50914);
+  color: var(--n4f-accent, #e50914);
+  padding: 0.35rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.2s;
+}
+
+.btn-cancel-share:hover {
+  background-color: rgba(229, 9, 20, 0.1);
+}
+
+
 
