@@ -27,7 +27,13 @@ The **Rating-Service** operates independently to capture and process user feedba
 - **Submit and Store Ratings**: Users can seamlessly submit ratings for physical movie assets directly from the frontend interface. 
 - **Data Hydration**: Ratings are passed securely to the graph database to continuously influence the recommendation engine's accuracy, acting as the primary input loop for refining future personalized suggestions.
 
-### 5. Code Quality Assurance & CI/CD Pipelines
+### 5. Content-Based Recommendation Algorithm
+The **Recommendation-Service** uses a content-based recommendation algorithm to suggest movies to users.
+- **Content-Based Filtering**: It recommends movies based on the user's viewing history and ratings using advanced cypher's queries.
+- **Fallback Recommendation**: If the user has no ratings, it recommends movies based on the genre and release year of the movies they have watched.
+- **Sharing**: The user has the possibility to recommend a movie to a following user. The followed user has the possibility to view their followers' recommendations alongside the ones suggested by the algorithm. 
+
+### 6. Code Quality Assurance & CI/CD Pipelines
 The project enforces strict software engineering standards through automated pipelines, testing boundaries, and quality gates.
 - **Unit Testing Lifecycle**: Intensive integration of unit tests (JUnit and TS specs) across Angular logic, Spring Boot controllers, and secure configurations, complete with comprehensive dependency mocking.
 - **Test Coverage Metrics (JaCoCo)**: Automatic coverage reports are generated during the Maven build lifecycle to ensure critical logic pathways remain rigorously tested during development.

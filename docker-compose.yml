@@ -17,6 +17,7 @@ services:
     depends_on:
       - movie-service
       - user-service
+      - recommendation-service
 
   movie-service:
     build: ./services/movie-service
@@ -51,6 +52,18 @@ services:
     depends_on:
       - neo4j
 
+  recommendation-service:
+    build: ./services/recommendation-service
+    ports:
+      - "8084:8084"
+    environment:
+      - NEO4J_URI=bolt://neo4j:7687
+      - NEO4J_USER=neo4j
+      - NEO4J_PASSWORD=password
+    depends_on:
+      - neo4j
+
 volumes:
   neo4j_data:
+
 
