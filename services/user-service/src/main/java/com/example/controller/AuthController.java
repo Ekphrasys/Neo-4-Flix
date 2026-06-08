@@ -10,9 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import org.springframework.validation.annotation.Validated;
 
 import java.util.HashMap;
 import java.util.List;
@@ -60,7 +57,7 @@ public class AuthController {
         u.setTwoFactorEnabled(true);
 
         userRepository.save(u);
-        String token = JwtUtil.generateToken(u.getId().toString(), u.getUsername());
+        String token = JwtUtil.generateToken(u.getId(), u.getUsername());
         String qrCodeUri = totpService.buildOtpAuthUri(secret, email);
 
         Map<String, String> response = new HashMap<>();
