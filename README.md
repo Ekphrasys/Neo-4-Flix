@@ -69,19 +69,31 @@ To gracefully stop and remove the running Docker containers, use:
 docker compose down
 ```
 
+## SSL Certificates Generation
+To enable HTTPS for the frontend and backend services, you can generate self-signed SSL certificates using OpenSSL. Here’s how you can do it:
+In the terminal, run the generate-ssl.sh script:
+```bash
+    ./generate-ssl.sh
+```
+If the permission is denied, you can change the permissions of the script using:
+```bash
+    chmod +x generate-ssl.sh
+```
+
 ## Exposed Services and Ports
 
 The application communicates over several mapped ports. Below is a detailed mapping of the services when running locally:
 
-| Service | Port | Description |
-| :--- | :--- | :--- |
-| Frontend | 4200 | Client-side Angular web application (User Interface) |
-| Neo4j (HTTP) | 7474 | Cypher DB web administration interface |
-| Neo4j (Bolt) | 7687 | Internal application communication port for the graph database |
-| Jenkins | 8080 | Continuous Integration server |
-| User-service | 8081 | Spring Boot API for user management and authentication |
-| Movie-service | 8082 | Spring Boot API for the movie catalog and recommendation engine |
-| Rating-service | 8083 | Spring Boot API for handling and processing user movie ratings |
+| Service                | Port | Description                                                     |
+|:-----------------------|:-----|:----------------------------------------------------------------|
+| Frontend               | 4200 | Client-side Angular web application (User Interface)            |
+| Neo4j (HTTP)           | 7474 | Cypher DB web administration interface                          |
+| Neo4j (Bolt)           | 7687 | Internal application communication port for the graph database  |
+| Jenkins                | 8080 | Continuous Integration server                                   |
+| User-service           | 8081 | Spring Boot API for user management and authentication          |
+| Movie-service          | 8082 | Spring Boot API for the movie catalog and recommendation engine |
+| Rating-service         | 8083 | Spring Boot API for handling and processing user movie ratings  |
+| Recommendation-service | 8084 | Spring Boot API for handling recommendations for users          |
 
 ## Frontend Interface & Application Flow
 
