@@ -15,7 +15,7 @@ export interface MovieSearchParams {
   providedIn: 'root'
 })
 export class MovieService {
-  private readonly baseUrl = 'http://localhost:8082/api/movies';
+  private readonly baseUrl = '/api/movies';
 
   constructor(private readonly http: HttpClient) { }
 

@@ -9,7 +9,7 @@ import { WatchlistService } from './watchlist.service';
 describe('WatchlistService', () => {
   let service: WatchlistService;
   let httpMock: HttpTestingController;
-  const baseUrl = 'http://localhost:8082/api/watchlist';
+  const baseUrl = '/api/watchlist';
   const movieId = '550e8400-e29b-41d4-a716-446655440000';
 
   beforeEach(() => {

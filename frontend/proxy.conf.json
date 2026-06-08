@@ -1,0 +1,22 @@
+{
+  "/api/auth": {
+    "target": "http://user-service:8081",
+    "secure": false
+  },
+  "/api/movies": {
+    "target": "http://movie-service:8082",
+    "secure": false
+  },
+  "/api/watchlist": {
+    "target": "http://movie-service:8082",
+    "secure": false
+  },
+  "/api/ratings": {
+    "target": "http://rating-service:8083",
+    "secure": false
+  },
+  "/api/recommendations": {
+    "target": "http://recommendation-service:8084",
+    "secure": false
+  }
+}

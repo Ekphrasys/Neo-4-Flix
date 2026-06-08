@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class RecommendationService {
-  private readonly baseUrl = 'http://localhost:8084/api/recommendations';
+  private readonly baseUrl = '/api/recommendations';
 
   constructor(private readonly http: HttpClient) { }
 

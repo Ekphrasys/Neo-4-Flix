@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class WatchlistService {
-  private readonly baseUrl = 'http://localhost:8082/api/watchlist';
+  private readonly baseUrl = '/api/watchlist';
 
   constructor(private readonly http: HttpClient) {}
 

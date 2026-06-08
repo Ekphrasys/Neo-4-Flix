@@ -11,7 +11,7 @@ export interface RatingStats {
   providedIn: 'root',
 })
 export class RatingService {
-  private readonly baseUrl = 'http://localhost:8083/api/ratings';
+  private readonly baseUrl = '/api/ratings';
 
   constructor(private readonly http: HttpClient) {}
 
