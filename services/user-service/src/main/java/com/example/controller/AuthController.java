@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import com.example.model.User;
+import com.example.dto.RegisterRequest;
 import com.example.repository.UserRepository;
 import com.example.security.JwtUtil;
 import com.example.security.TotpService;
@@ -8,6 +9,7 @@ import com.example.validation.PasswordValidator;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.HashMap;
 import java.util.List;
@@ -27,10 +29,15 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Map<String, String>> register(@RequestBody Map<String, String> body) {
-        String username = body.get("username");
-        String email = body.get("email");
-        String password = body.get("password");
+    public ResponseEntity<Map<String, String>> register(@Valid @RequestBody RegisterRequest body) {
+        String username = body.getUsername();
+        String email = body.getEmail();
+        String password = body.getPassword();
+
+        // Security for cypher injection
+        if (email != null && (email.contains("'") || email.contains("\"") || email.contains("//"))) {
+            return ResponseEntity.badRequest().body(Map.of(ERROR_KEY, "Invalid characters in email"));
+        }
 
         List<String> passwordErrors = PasswordValidator.validate(password);
         if (!passwordErrors.isEmpty()) {
@@ -40,6 +47,7 @@ public class AuthController {
         if (!userRepository.findByEmail(email).isEmpty()) {
             return ResponseEntity.badRequest().body(Map.of(ERROR_KEY, "Email already in use"));
         }
+
         String hashed = passwordEncoder.encode(password);
         User u = new User(username, email, hashed);
 
@@ -49,7 +57,7 @@ public class AuthController {
         u.setTwoFactorEnabled(true);
 
         userRepository.save(u);
-        String token = JwtUtil.generateToken(u.getId().toString(), u.getUsername());
+        String token = JwtUtil.generateToken(u.getId(), u.getUsername());
         String qrCodeUri = totpService.buildOtpAuthUri(secret, email);
 
         Map<String, String> response = new HashMap<>();
