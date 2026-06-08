@@ -6,12 +6,18 @@ import com.example.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 import java.util.UUID;
 
+
 @RestController
 @RequestMapping("/api/movies")
+@Validated
 public class MovieController {
 
     private final MovieService movieService;
@@ -26,13 +32,12 @@ public class MovieController {
             @RequestParam(value = "q", required = false) String q,
             @RequestParam(value = "title", required = false) String title,
             @RequestParam(value = "genre", required = false) Genre genre,
-            @RequestParam(value = "releaseYearFrom", required = false) Integer releaseYearFrom,
-            @RequestParam(value = "releaseYearTo", required = false) Integer releaseYearTo
+            @RequestParam(value = "releaseYearFrom", required = false) @Min(1888) @Max(2026) Integer releaseYearFrom,
+            @RequestParam(value = "releaseYearTo", required = false) @Min(1888) @Max(2026) Integer releaseYearTo
     ) {
         q = normalizeBlank(q);
         title = normalizeBlank(title);
 
-        // Validation minimaliste des bornes
         if (releaseYearFrom != null && releaseYearTo != null && releaseYearFrom > releaseYearTo) {
             return ResponseEntity.badRequest().build();
         }
@@ -59,7 +64,7 @@ public class MovieController {
     }
 
     @PostMapping
-    public ResponseEntity<Movie> createMovie(@RequestBody Movie movie) {
+    public ResponseEntity<Movie> createMovie(@Valid @RequestBody Movie movie) {
         return ResponseEntity.ok(movieService.saveMovie(movie));
     }
 
@@ -82,5 +87,10 @@ public class MovieController {
     @GetMapping("/recommendations/{userId}")
     public ResponseEntity<List<Movie>> getRecommendations(@PathVariable String userId) {
         return ResponseEntity.ok(movieService.getRecommendations(userId));
+    }
+
+    @ExceptionHandler(jakarta.validation.ConstraintViolationException.class)
+    public ResponseEntity<String> handleConstraintViolation(jakarta.validation.ConstraintViolationException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
     }
 }

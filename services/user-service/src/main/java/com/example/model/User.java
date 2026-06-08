@@ -4,6 +4,9 @@ import lombok.Data;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 
+import jakarta.validation.constraints.*;
+import jakarta.persistence.*;
+
 import java.util.UUID;
 
 @Node("User")
@@ -12,8 +15,13 @@ public class User {
     @Id
     private String id;
 
+    @NotBlank @Size(max = 50, message = "Username too long")
     private String username;
+
+    @NotBlank @Email(message = "Email should be valid") @Size(max = 255, message = "Email too long")
     private String email;
+
+    @NotBlank @Size(min = 8, max = 64, message = "Password must be between 8 and 64 characters")
     private String password;
     private String twoFactorSecret;
     private boolean twoFactorEnabled;
