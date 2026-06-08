@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private base = 'http://localhost:8081/api/auth';
+  private base = '/api/auth';
   private loggedIn = new BehaviorSubject<boolean>(!!this.getToken());
 
   constructor(private http: HttpClient, private router: Router) {}

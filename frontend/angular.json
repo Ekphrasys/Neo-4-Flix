@@ -53,6 +53,13 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
+          "options": {
+            "ssl": true,
+            "sslKey": "../ssl/server.key",
+            "sslCert": "../ssl/server.crt",
+            "buildTarget": "frontend:build",
+            "proxyConfig": "proxy.conf.json"
+          },
           "configurations": {
             "production": {
               "buildTarget": "frontend:build:production"

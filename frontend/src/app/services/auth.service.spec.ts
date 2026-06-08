@@ -11,7 +11,7 @@ describe('AuthService', () => {
   let service: AuthService;
   let httpMock: HttpTestingController;
   let routerSpy: jasmine.SpyObj<Router>;
-  const baseUrl = 'http://localhost:8081/api/auth';
+  const baseUrl = '/api/auth';
 
   const createToken = (payload: object): string => {
     const encodedPayload = btoa(JSON.stringify(payload));
